@@ -16,6 +16,9 @@
     "preview": "bun run src/main.ts --html && bun run src/serve.ts --open",
     "check": "bunx tsc -p tsconfig.json --noEmit",
     "build": "bunx tsc -p tsconfig.json",
+    "site:check": "bunx tsc -p site/tsconfig.json --noEmit && bunx tsc -p site/tsconfig.bun.json --noEmit",
+    "site:build": "bun run site/build.ts",
+    "site:dev": "bun run site/build.ts && bun run site/serve.ts",
     "embed": "bun run src/main.ts --embed"
   },
   "dependencies": {
