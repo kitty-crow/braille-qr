@@ -22,6 +22,7 @@ interface Els {
   readonly copy: HTMLButtonElement;
   readonly txt: HTMLButtonElement;
   readonly html: HTMLButtonElement;
+  readonly embed: HTMLButtonElement;
 }
 
 interface Last {
@@ -56,6 +57,7 @@ class Web {
       copy: this.el<HTMLButtonElement>("[data-copy]"),
       txt: this.el<HTMLButtonElement>("[data-download-text]"),
       html: this.el<HTMLButtonElement>("[data-download-html]"),
+      embed: this.el<HTMLButtonElement>("[data-copy-embed]"),
     };
   }
 
@@ -144,7 +146,7 @@ class Web {
   }
 
   private enable(on: boolean): void {
-    [this.els.copy, this.els.txt, this.els.html].forEach((btn) => {
+    [this.els.copy, this.els.txt, this.els.html, this.els.embed].forEach((btn) => {
       btn.disabled = !on;
     });
   }
