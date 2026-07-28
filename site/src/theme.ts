@@ -2,6 +2,10 @@ type Theme = "light" | "dark";
 
 const key = "braille-qr.theme";
 const media = window.matchMedia("(prefers-color-scheme: dark)");
+const themeColours: Record<Theme, string> = {
+  light: "#087f9c",
+  dark: "#071418",
+};
 
 function saved(): Theme | null {
   try {
@@ -23,13 +27,18 @@ function controls(theme: Theme): void {
     btn.setAttribute("aria-pressed", String(dark));
     btn.setAttribute("aria-label", `Use ${dark ? "light" : "dark"} theme`);
     const label = btn.querySelector<HTMLElement>("[data-theme-label]");
-    if (label) label.textContent = dark ? "Dark" : "Light";
+    if (label) {
+      label.textContent = dark ? "🌙" : "☀️";
+      label.title = dark ? "Dark theme" : "Light theme";
+    }
   });
 }
 
 function apply(theme: Theme): void {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (meta) meta.content = themeColours[theme];
   controls(theme);
   window.dispatchEvent(new CustomEvent<Theme>("braille-qr:theme", { detail: theme }));
 }
