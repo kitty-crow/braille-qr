@@ -1,65 +1,103 @@
 # Braille QR
 
-A strongly typed TypeScript CLI that renders dense Unicode Braille QR codes as either self-contained HTML or terminal text.
+A strongly typed Bun and TypeScript utility that renders genuine QR matrices as dense Unicode Braille. It supports terminal text, self-contained HTML, a browser generator and paste-ready website embeds.
 
-With no `--text` argument it creates a cryptographically random 64-byte session token, converts it to uppercase hexadecimal so the QR encoder can use alphanumeric mode, and encodes it with high error correction.
-
-## Requirements
-
-- Node.js 20 or newer
-- npm
+Without `--text`, the CLI creates a random 64-byte token and encodes its uppercase hexadecimal representation.
 
 ## Install
 
 ```bash
-npm install
-npm run build
+bun install
+bun run check
+```
+
+## Terminal output
+
+Terminal output and fixed-width justification are the defaults.
+
+```bash
+bun run qr
+bun run qr --text "https://kittycrow.dev"
+```
+
+Save the output:
+
+```bash
+bun run qr \
+  --text "https://kittycrow.dev" \
+  -o output/site.txt
+```
+
+Disable fixed-width rows:
+
+```bash
+bun run qr --no-justify
 ```
 
 ## HTML output
 
-HTML is the default. Without `-o`, it writes `output/braille-qr.html`.
-
 ```bash
-npm run dev -- --dark --justify
-```
-
-Encode supplied text:
-
-```bash
-npm run dev -- \
+bun run qr \
   --text "https://kittycrow.dev" \
   --html \
   --dark \
-  --justify \
   -o output/site.html
 ```
 
-The HTML measures the active Braille glyph at runtime. It sets each Braille cell to twice its measured width in height, preserving the underlying 2-by-4 dot geometry and square QR modules.
-
-`--justify` uses a fixed CSS grid with one explicit cell per Braille character. This prevents browsers and embedded views from splitting, wrapping or unevenly reflowing individual rows.
-
-## Terminal output
-
-Terminal mode prints only the QR to standard output. Status and generated-token details go to standard error, so they cannot corrupt the code.
+Serve and open the default generated page:
 
 ```bash
-npm run dev -- --term --justify
+bun run preview
 ```
 
-Save terminal text instead:
+## Embeddable div
 
 ```bash
-npm run dev -- \
+bun run qr \
   --text "https://kittycrow.dev" \
-  --term \
-  --justify \
-  -o output/site.txt
+  --embed
 ```
 
-In an interactive ANSI terminal, `--justify` disables automatic line wrapping while the QR is printed, then restores it. Every row is padded with Unicode Braille blanks to the same character width. Redirected or saved output contains no ANSI control sequences.
+The result is one paste-ready host div. It links to the versioned GitHub Pages CSS, loader and bundled browser API, while the consuming website controls the size and position of the outer div.
 
-## Options
+The web generator shows the same fragment in a read-only, syntax-highlighted panel and copies the untouched plain HTML.
+
+See the [embedding guide](docs/embed.md).
+
+## Browser app
+
+```bash
+bun run site:check
+bun run site:build
+bun run site:dev
+```
+
+The Pages app provides:
+
+- live QR generation while text or settings change
+- operating-system light and dark theme detection
+- a persistent theme override stored in `localStorage`
+- text, HTML and embed exports
+- a direct `/generate?text=...` route
+- clean extensionless navigation
+- experimental hollow-edge, distance-sensitive rendering
+
+`site/build.ts` bundles all browser TypeScript and the QR dependency into ignored JavaScript artefacts. The only authored JavaScript source retained in the repository is the embed loader template.
+
+GitHub workflows:
+
+- [CI](.github/workflows/ci.yml) checks the CLI and site, then bundles the front end.
+- [Pages](.github/workflows/pages.yml) builds and deploys `site/dist` from `main`.
+
+## Hollow edges
+
+Hollow edges may scan more reliably from a distance while failing close up. This can produce a useful “step back to scan” effect for signage, exhibits or projected installations. It is not a security mechanism.
+
+```bash
+bun run qr --text "https://kittycrow.dev" --edges
+```
+
+## Main options
 
 ```text
 --text <value>          Encode supplied text
@@ -69,42 +107,29 @@ In an interactive ANSI terminal, `--justify` disables automatic line wrapping wh
 --border <n>            Quiet zone in modules, default 4
 --font-size <px>        HTML Braille font size, default 2.5
 --thicken <px>          HTML glyph thickening, default 0.18
---dark                  White on black in HTML or ANSI terminal output
+--dark                  White on black
 --edges                 Draw hollow module edges
 --edge-width <n>        Edge thickness in dots, default 1
---format <html|term>    Output format, default html
---html                  Alias for --format html
---term                  Alias for --format term
---justify               Force fixed-width rows and disable terminal wrapping
---no-justify            Disable forced row layout
--o, --output <path>     Save output instead of the format default
+--html                  Generate self-contained HTML
+--embed                 Generate a paste-ready embed div
+--embed-src <url>       Override the published embed API URL
+--no-justify            Disable fixed-width row layout
+-o, --output <path>     Save output
 ```
-
-## Source layout
-
-```text
-src/
-  cli/      argument parsing and help
-  core/     token, QR matrix, scaling and Braille encoding
-  html/     HTML escaping, CSS and fixed-cell page rendering
-  term/     terminal rendering and ANSI wrapping control
-  io/       file and stdout output
-  app.ts    application flow
-  main.ts   executable entry point
-  types.ts  shared types
-```
-
-The code uses short names that remain clear in local context. Comments carry the uncommon detail instead of bloating identifiers.
-
-Authored by [Kitty Crow](https://kittycrow.dev).
 
 ## Documentation
 
 - [Documentation index](docs/README.md)
 - [Usage](docs/usage.md)
 - [Output formats](docs/output.md)
+- [Embedding](docs/embed.md)
 - [Architecture](docs/architecture.md)
 - [Security](docs/security.md)
+
+## Author
+
+Kitty Crow  
+https://kittycrow.dev
 
 ## Licence
 

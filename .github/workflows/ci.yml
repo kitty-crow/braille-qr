@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install
+        run: bun install
+      - name: Check CLI
+        run: bun run check
+      - name: Check site
+        run: bun run site:check
+      - name: Bundle site
+        run: bun run site:build
+      - name: Confirm generated files are untracked
+        run: |
+          test -f site/dist/assets/app.js
+          test -f site/dist/assets/boot.js
+          test -f site/dist/v1/embed.js
+          test -f site/dist/v1/load.js
+          test -f site/dist/v1/embed.css
+          test -z "$(git ls-files site/dist build output)"

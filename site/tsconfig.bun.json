@@ -12,7 +12,12 @@
     "useUnknownInCatchVariables": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["bun"]
+    "types": [
+      "bun"
+    ]
   },
-  "include": ["./build.ts", "./serve.ts"]
+  "include": [
+    "./build.ts",
+    "./serve.ts"
+  ]
 }

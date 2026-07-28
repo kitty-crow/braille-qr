@@ -3,5 +3,4 @@ build/
 output/
 *.log
 .DS_Store
-
 site/dist/

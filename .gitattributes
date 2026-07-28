@@ -1,0 +1,5 @@
+# Generated JavaScript is a build artefact, not authored source.
+build/** linguist-generated=true
+site/dist/** linguist-generated=true
+templates/embed/*.js linguist-generated=true
+*.min.js linguist-generated=true
