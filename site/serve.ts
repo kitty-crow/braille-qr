@@ -6,9 +6,9 @@ const root = join(import.meta.dir, "dist");
 const routes = new Map<string, string>([
   ["/", "index.html"],
   ["/index.html", "index.html"],
-  ["/about", "about.html"],
-  ["/about/", "about.html"],
-  ["/about.html", "about.html"],
+  ["/readme", "readme.html"],
+  ["/readme/", "readme.html"],
+  ["/readme.html", "readme.html"],
   ["/generate", "generate.html"],
   ["/generate/", "generate.html"],
   ["/generate.html", "generate.html"],

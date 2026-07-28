@@ -35,6 +35,7 @@ const app = await Bun.build({
   entrypoints: [
     join(src, "app.ts"),
     join(src, "embed-view.ts"),
+    join(src, "readme.ts"),
     join(src, "routes.ts"),
     join(src, "theme.ts"),
   ],
@@ -73,18 +74,20 @@ await cp(join(tplDir, "embed.js"), join(api, "load.js"));
 await cp(join(src, "styles.css"), join(out, "styles.css"));
 await cp(join(src, "fixes.css"), join(out, "fixes.css"));
 await cp(join(src, "skin.css"), join(out, "skin.css"));
+await cp(join(src, "content.css"), join(out, "content.css"));
 await cp(join(src, "logo.svg"), join(out, "logo.svg"));
 await cp(join(src, "index.html"), join(out, "index.html"));
 
-const about = await readFile(join(src, "about.html"), "utf8");
-await writeFile(join(out, "about.html"), about, "utf8");
-await mkdir(join(out, "about"), { recursive: true });
+const readme = await readFile(join(src, "readme.html"), "utf8");
+await writeFile(join(out, "readme.html"), readme, "utf8");
+await mkdir(join(out, "readme"), { recursive: true });
 await writeFile(
-  join(out, "about", "index.html"),
-  about
+  join(out, "readme", "index.html"),
+  readme
     .replaceAll('href="./logo.svg"', 'href="../logo.svg"')
     .replaceAll('href="./styles.css"', 'href="../styles.css"')
     .replaceAll('href="./skin.css"', 'href="../skin.css"')
+    .replaceAll('href="./content.css"', 'href="../content.css"')
     .replaceAll('src="./assets/', 'src="../assets/'),
   "utf8",
 );
@@ -109,7 +112,7 @@ await writeFile(join(out, "generate.html"), genRoot, "utf8");
 await mkdir(join(out, "generate"), { recursive: true });
 await writeFile(join(out, "generate", "index.html"), genDir, "utf8");
 
-const notFound = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Not found · Braille QR</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./skin.css"></head><body><main class="main"><section class="about-hero"><p class="eyebrow">404</p><h1>That page is not here.</h1><p class="lead">Return to the Braille QR generator.</p><p><a class="button button--primary" href="./">Open generator</a></p></section></main></body></html>`;
+const notFound = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Not found · Braille QR</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./skin.css"><link rel="stylesheet" href="./content.css"></head><body><main class="main"><section class="about-hero"><p class="eyebrow">404</p><h1>That page is not here.</h1><p class="lead">Return to the Braille QR generator.</p><p><a class="button button--primary" href="./">Return to generator</a></p></section></main></body></html>`;
 await writeFile(join(out, "404.html"), notFound, "utf8");
 await writeFile(join(out, ".nojekyll"), "", "utf8");
 

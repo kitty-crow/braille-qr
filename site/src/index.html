@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./fixes.css">
   <link rel="stylesheet" href="./skin.css">
+  <link rel="stylesheet" href="./content.css">
   <script src="https://cdn.jsdelivr.net/npm/marked@18.0.7/lib/marked.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
@@ -24,7 +25,7 @@
   <header class="header">
     <div class="header__inner">
       <a class="brand" href="./" aria-label="Braille QR home"><img src="./logo.svg" alt=""><span>Braille <span>QR</span></span></a>
-      <nav class="nav" aria-label="Primary navigation"><a href="#generator">Generator</a><a href="#how">How it works</a><a href="./about">About</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
+      <nav class="nav" aria-label="Primary navigation"><a href="#generator">Generator</a><a href="#how">How it works</a><a href="#about">About</a><a href="./readme">README</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
       <button class="theme" type="button" data-theme-toggle aria-pressed="false"><span class="theme__track" aria-hidden="true"><span class="theme__thumb"></span></span><span data-theme-label aria-hidden="true">☀️</span></button>
     </div>
   </header>
@@ -34,7 +35,7 @@
         <p class="eyebrow">Dense Unicode QR generator</p>
         <h1>QR codes,<br>rendered as text.</h1>
         <p class="lead">Turn links, messages and cryptographic tokens into scan-ready Unicode Braille. Generate in the browser, copy to a terminal, or download a self-contained HTML page.</p>
-        <div class="hero__actions"><a class="button button--primary" href="#generator">Open generator</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">View source</a></div>
+        <div class="hero__actions"><a class="button button--primary" href="#generator">Jump to generator</a><a class="button button--secondary" href="#about">About the project</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">View source</a></div>
       </div>
       <div class="hero__visual panel" aria-label="Justified Braille QR example"><span class="hero__orb hero__orb--a" aria-hidden="true"></span><span class="hero__orb hero__orb--b" aria-hidden="true"></span><div class="mini-code" data-mini></div></div>
     </section>
@@ -50,7 +51,6 @@
             <div class="field"><label for="draw">Module style</label><select id="draw" data-draw><option value="fill" selected>Filled</option><option value="edge">Hollow edges</option></select><small class="distance-note">Hollow edges are distance-sensitive: they often scan from farther away but may fail up close.</small></div>
             <label class="switch" for="output-dark"><span><strong>Dark output</strong><br><small>Follows the page theme by default</small></span><input id="output-dark" type="checkbox" data-output-dark></label>
           </div>
-          <div class="controls__actions"><button class="button button--secondary" type="reset">Reset</button><span class="live-note">Preview updates as you type.</span></div>
         </form>
 
         <section id="how" class="how-compact panel" aria-labelledby="how-title">
@@ -68,11 +68,20 @@
         <header class="preview__head"><div><p class="eyebrow">Live preview</p><h2>Scan or export</h2></div><div class="metrics" data-metrics></div></header>
         <div class="preview__frame"><div class="preview__empty" data-empty><h3>Your QR appears here</h3><p>Enter text or create a token to preview the justified Braille grid.</p></div><div class="qr" data-preview hidden></div></div>
         <div class="preview__actions"><button class="button button--secondary" type="button" data-copy disabled>Copy text</button><button class="button button--secondary" type="button" data-download-text disabled>Download .txt</button><button class="button button--secondary" type="button" data-copy-embed disabled>Copy embed div</button><button class="button button--primary" type="button" data-download-html disabled>Download HTML</button></div>
-        <div class="embed-code field"><span class="field__label" id="embed-code-label">Embed div</span><div class="embed-code__view" data-embed-view role="textbox" aria-readonly="true" aria-labelledby="embed-code-label" aria-describedby="embed-code-note" tabindex="0"></div><small id="embed-code-note">Read-only. The fragment updates live and links to the versioned upstream JavaScript and stylesheet.</small></div>
-        <p class="status" role="status" aria-live="polite" data-status>Ready.</p>
+        <div class="embed-code field"><span class="field__label" id="embed-code-label">Embed div</span><div class="embed-code__view" data-embed-view role="textbox" aria-readonly="true" aria-labelledby="embed-code-label" tabindex="0"></div></div>
+        <p class="sr-only" role="status" aria-live="polite" data-status></p>
       </article>
     </section>
+
+    <section id="about" class="section about-home" aria-labelledby="about-title">
+      <div class="section__head"><p class="eyebrow">About</p><h2 id="about-title">A real QR matrix in Unicode Braille.</h2><p class="lead">Braille QR preserves the geometry of a standards-compliant QR code while packing its dots into fixed-width text characters. The same TypeScript core powers the browser generator, command-line tool and embeddable output.</p></div>
+      <div class="about-home__grid">
+        <article class="about-home__card panel"><h3>Text first</h3><p>Copy the result into terminals, messages and documents without exporting an image, or download a standalone HTML file when exact browser rendering matters.</p></article>
+        <article class="about-home__card panel"><h3>Deliberately small</h3><p>The project focuses on QR encoding, dot scaling and Braille packing rather than adding an application framework around a compact utility.</p></article>
+        <article class="about-home__card panel"><h3>Open project</h3><p>Released under the MIT Licence and authored by Kitty Crow. The full usage guide, CLI options and implementation notes live in the repository README.</p><div class="about-home__actions"><a class="button button--primary" href="./readme">Read the README</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">Browse source</a></div></article>
+      </div>
+    </section>
   </main>
-  <footer class="footer"><span>MIT licensed · Built by <a href="https://kittycrow.dev">Kitty Crow</a></span><span><a href="./about">About</a> · <a href="https://github.com/kitty-crow/braille-qr">GitHub</a></span></footer>
+  <footer class="footer"><span>MIT licensed · Built by <a href="https://kittycrow.dev">Kitty Crow</a></span><span><a href="#about">About</a> · <a href="./readme">README</a> · <a href="https://github.com/kitty-crow/braille-qr">GitHub</a></span></footer>
 </body>
 </html>

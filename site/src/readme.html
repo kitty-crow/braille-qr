@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Braille QR project README.">
+  <meta name="theme-color" content="#087f9c">
+  <title>README · Braille QR</title>
+  <script src="./assets/boot.js"></script>
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./skin.css">
+  <link rel="stylesheet" href="./content.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked@18.0.7/lib/marked.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
+  <script type="module" src="./assets/routes.js"></script>
+  <script type="module" src="./assets/theme.js"></script>
+  <script type="module" src="./assets/readme.js"></script>
+</head>
+<body>
+  <a class="skip" href="#readme-content">Skip to README</a>
+  <header class="header">
+    <div class="header__inner">
+      <a class="brand" href="./" aria-label="Braille QR home"><img src="./logo.svg" alt=""><span>Braille <span>QR</span></span></a>
+      <nav class="nav" aria-label="Primary navigation"><a href="./#generator">Generator</a><a href="./#how">How it works</a><a href="./#about">About</a><a href="./readme" aria-current="page">README</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
+      <button class="theme" type="button" data-theme-toggle aria-pressed="false"><span class="theme__track" aria-hidden="true"><span class="theme__thumb"></span></span><span data-theme-label aria-hidden="true">☀️</span></button>
+    </div>
+  </header>
+  <main class="main readme-main">
+    <section class="readme-intro">
+      <div><p class="eyebrow">Repository documentation</p><h1>README</h1><p class="lead">The current project guide, fetched from GitHub and rendered as a readable page.</p></div>
+      <a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr/blob/main/README.md">View on GitHub</a>
+    </section>
+    <section class="readme-shell panel" aria-labelledby="readme-title">
+      <header class="readme-toolbar"><strong id="readme-title">Braille QR documentation</strong><span class="readme-source">main / README.md</span></header>
+      <p class="sr-only" id="readme-status" role="status" aria-live="polite"></p>
+      <article id="readme-content" class="markdown-body"><p>Loading README…</p></article>
+    </section>
+  </main>
+  <footer class="footer"><span>MIT licensed · Built by <a href="https://kittycrow.dev">Kitty Crow</a></span><span><a href="./#about">About</a> · <a href="./">Generator</a> · <a href="https://github.com/kitty-crow/braille-qr">GitHub</a></span></footer>
+</body>
+</html>
