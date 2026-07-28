@@ -97,3 +97,15 @@ src/
 The code uses short names that remain clear in local context. Comments carry the uncommon detail instead of bloating identifiers.
 
 Authored by [Kitty Crow](https://kittycrow.dev).
+
+## Documentation
+
+- [Documentation index](docs/README.md)
+- [Usage](docs/usage.md)
+- [Output formats](docs/output.md)
+- [Architecture](docs/architecture.md)
+- [Security](docs/security.md)
+
+## Licence
+
+Released under the [MIT Licence](LICENSE).
