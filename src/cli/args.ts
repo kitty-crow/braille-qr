@@ -11,8 +11,9 @@ const DEF = {
   dark: false,
   draw: "fill" as const,
   edge: 1,
-  fmt: "html" as const,
-  justify: false,
+  fmt: "term" as const,
+  justify: true,
+  embedSrc: "https://kitty-crow.github.io/braille-qr/v1/embed.js",
 };
 
 export class Args {
@@ -29,13 +30,12 @@ export class Args {
     let edge = DEF.edge;
     let fmt: Fmt = DEF.fmt;
     let justify = DEF.justify;
+    let embedSrc = DEF.embedSrc;
     let out: string | undefined;
 
     for (let i = 0; i < argv.length; i += 1) {
       const arg = argv[i];
-      if (arg === undefined) {
-        continue;
-      }
+      if (arg === undefined) continue;
 
       switch (arg) {
         case "--text":
@@ -75,6 +75,12 @@ export class Args {
         case "--html":
           fmt = "html";
           break;
+        case "--embed":
+          fmt = "embed";
+          break;
+        case "--embed-src":
+          embedSrc = this.url(arg, this.val(arg, argv[++i]));
+          break;
         case "--term":
         case "--terminal":
           fmt = "term";
@@ -97,10 +103,22 @@ export class Args {
       }
     }
 
-    this.chk({ bytes, scale, ec, border, font, thick, dark, draw, edge, fmt, justify });
+    this.chk({ bytes, scale, ec, border, font, thick, dark, draw, edge, fmt, justify, embedSrc });
 
-    const base = { bytes, scale, ec, border, font, thick, dark, draw, edge, fmt, justify };
-
+    const base = {
+      bytes,
+      scale,
+      ec,
+      border,
+      font,
+      thick,
+      dark,
+      draw,
+      edge,
+      fmt,
+      justify,
+      embedSrc,
+    };
     const cfg: Cfg = text === undefined ? base : { ...base, text };
     return out === undefined ? cfg : { ...cfg, out };
   }
@@ -111,34 +129,34 @@ export class Args {
   }
 
   private val(name: string, val: string | undefined): string {
-    if (val === undefined || val === "") {
-      throw new Error(`${name} requires a value.`);
-    }
+    if (val === undefined || val === "") throw new Error(`${name} requires a value.`);
     return val;
   }
 
   private num(name: string, raw: string | undefined): number {
     const val = Number(this.val(name, raw));
-    if (!Number.isFinite(val)) {
-      throw new Error(`${name} must be a finite number.`);
-    }
+    if (!Number.isFinite(val)) throw new Error(`${name} must be a finite number.`);
     return val;
   }
 
   private ec(raw: string): Ec {
     const val = raw.toUpperCase();
-    if (val === "L" || val === "M" || val === "Q" || val === "H") {
-      return val;
-    }
+    if (val === "L" || val === "M" || val === "Q" || val === "H") return val;
     throw new Error("--ec must be L, M, Q, or H.");
   }
 
   private fmt(raw: string): Fmt {
     const val = raw.toLowerCase();
-    if (val === "html" || val === "term") {
-      return val;
+    if (val === "html" || val === "term" || val === "embed") return val;
+    throw new Error("--format must be html, term, or embed.");
+  }
+
+  private url(name: string, raw: string): string {
+    try {
+      return new URL(raw).href;
+    } catch {
+      throw new Error(`${name} must be an absolute URL.`);
     }
-    throw new Error("--format must be html or term.");
   }
 
   private chk(cfg: Omit<Cfg, "text" | "out">): void {
@@ -151,12 +169,8 @@ export class Args {
     if (!Number.isInteger(cfg.border) || cfg.border < 4) {
       throw new Error("--border must be an integer of at least 4.");
     }
-    if (cfg.font <= 0) {
-      throw new Error("--font-size must be greater than zero.");
-    }
-    if (cfg.thick < 0) {
-      throw new Error("--thicken cannot be negative.");
-    }
+    if (cfg.font <= 0) throw new Error("--font-size must be greater than zero.");
+    if (cfg.thick < 0) throw new Error("--thicken cannot be negative.");
     if (!Number.isInteger(cfg.edge) || cfg.edge < 1) {
       throw new Error("--edge-width must be a positive integer.");
     }

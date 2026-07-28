@@ -2,7 +2,7 @@ export type Ec = "L" | "M" | "Q" | "H";
 
 export type Draw = "fill" | "edge";
 
-export type Fmt = "html" | "term";
+export type Fmt = "html" | "term" | "embed";
 
 export interface Cfg {
   readonly text?: string;
@@ -17,6 +17,7 @@ export interface Cfg {
   readonly edge: number;
   readonly fmt: Fmt;
   readonly justify: boolean;
+  readonly embedSrc: string;
   readonly out?: string;
 }
 

@@ -3,27 +3,31 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Generate dense Unicode Braille QR codes as self-contained HTML or terminal output.",
+  "description": "Generate dense Unicode Braille QR codes as terminal text, self-contained HTML, or a browser app.",
   "author": "Kitty Crow (https://kittycrow.dev)",
   "bin": {
-    "braille-qr": "build/main.js"
+    "braille-qr": "src/main.ts"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit",
-    "dev": "tsx src/main.ts",
-    "start": "node build/main.js"
+    "qr": "bun run src/main.ts",
+    "start": "bun run src/main.ts",
+    "html": "bun run src/main.ts --html",
+    "serve": "bun run src/serve.ts",
+    "preview": "bun run src/main.ts --html && bun run src/serve.ts --open",
+    "check": "bunx tsc -p tsconfig.json --noEmit",
+    "build": "bunx tsc -p tsconfig.json",
+    "embed": "bun run src/main.ts --embed"
   },
   "dependencies": {
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
-    "tsx": "^4.20.3",
+    "@types/bun": "latest",
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=20"
+    "bun": ">=1.2.0"
   },
+  "module": "src/main.ts",
   "license": "MIT"
 }
