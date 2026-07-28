@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "useUnknownInCatchVariables": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  },
+  "include": [
+    "./src/**/*.ts",
+    "../src/core/braille.ts",
+    "../src/core/code.ts",
+    "../src/core/dots.ts",
+    "../src/core/mat.ts",
+    "../src/core/qr.ts",
+    "../src/types.ts",
+    "../src/ext/qrcode.d.ts"
+  ]
+}
