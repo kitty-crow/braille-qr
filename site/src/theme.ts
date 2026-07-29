@@ -12,11 +12,23 @@ declare global {
 
 const key = "braille-qr.theme";
 const kofiSrc = "https://storage.ko-fi.com/cdn/scripts/overlay-widget.js";
+const kofiPage = "https://ko-fi.com/kittycrow";
+const kofiIcon = "https://storage.ko-fi.com/cdn/cup-border.png";
 const media = window.matchMedia("(prefers-color-scheme: dark)");
+const wide = window.matchMedia("(min-width: 721px)");
 const themeColours: Record<Theme, string> = {
   light: "#087f9c",
   dark: "#071418",
 };
+
+const kofiNodes = [
+  ".floatingchat-container-wrap",
+  ".floatingchat-container-wrap-mobi",
+  ".floating-chat-kofi-popup-iframe",
+  ".floating-chat-kofi-popup-iframe-mobi",
+  ".floating-chat-kofi-popup-iframe-closer",
+  ".floating-chat-kofi-popup-iframe-closer-mobi"
+].join(",");
 
 const kofiCss = `
 .floatingchat-container-wrap,
@@ -26,7 +38,7 @@ const kofiCss = `
   right: 16px !important;
   bottom: auto !important;
   left: auto !important;
-  width: min(230px, calc(100vw - 32px)) !important;
+  width: 230px !important;
   max-width: calc(100vw - 32px) !important;
   overflow: visible !important;
   transform: none !important;
@@ -38,8 +50,8 @@ const kofiCss = `
   position: static !important;
   inset: auto !important;
   display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: 230px !important;
+  max-width: none !important;
   margin: 0 !important;
   transform: none !important;
 }
@@ -48,7 +60,35 @@ const kofiCss = `
 .floating-chat-kofi-popup-iframe-mobi,
 .floating-chat-kofi-popup-iframe-closer,
 .floating-chat-kofi-popup-iframe-closer-mobi {
+  right: 16px !important;
+  left: auto !important;
+  max-width: calc(100vw - 32px) !important;
   z-index: var(--kofi-z, 49) !important;
+}
+
+.kofi-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.kofi-footer-link > img {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .floatingchat-container-wrap,
+  .floatingchat-container-wrap-mobi {
+    width: 56px !important;
+    height: 56px !important;
+    max-width: 56px !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+  }
 }
 `;
 
@@ -100,8 +140,33 @@ function toggle(): void {
   apply(next);
 }
 
-function hasKofi(): boolean {
-  return document.querySelector(".floatingchat-container-wrap, .floatingchat-container-wrap-mobi") !== null;
+function addKofiCss(): void {
+  if (document.getElementById("kofi-site-style") !== null) return;
+
+  const style = document.createElement("style");
+  style.id = "kofi-site-style";
+  style.textContent = kofiCss;
+  document.head.appendChild(style);
+}
+
+function addFooterKofi(): void {
+  const footer = document.querySelector<HTMLElement>(".footer > span:last-child");
+  if (footer === null || footer.querySelector(".kofi-footer-link") !== null) return;
+
+  footer.append(" · ");
+
+  const link = document.createElement("a");
+  link.className = "kofi-footer-link";
+  link.href = kofiPage;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  const icon = document.createElement("img");
+  icon.src = kofiIcon;
+  icon.alt = "";
+
+  link.append(icon, "Buy me a coffee");
+  footer.appendChild(link);
 }
 
 function placeKofi(): void {
@@ -121,24 +186,15 @@ function queueKofi(): void {
   kofiFrame = requestAnimationFrame(placeKofi);
 }
 
-function addKofiCss(): void {
-  if (document.getElementById("kofi-site-style") !== null) return;
-
-  const style = document.createElement("style");
-  style.id = "kofi-site-style";
-  style.textContent = kofiCss;
-  document.head.appendChild(style);
+function clearKofi(): void {
+  document.querySelectorAll(kofiNodes).forEach(node => node.remove());
 }
 
 function drawKofi(): void {
-  if (hasKofi()) {
-    queueKofi();
-    return;
-  }
-
+  clearKofi();
   window.kofiWidgetOverlay?.draw("kittycrow", {
     "type": "floating-chat",
-    "floating-chat.donateButton.text": "Buy me a coffee?",
+    "floating-chat.donateButton.text": wide.matches ? "Buy me a coffee?" : "",
     "floating-chat.donateButton.background-color": "#5bc0de",
     "floating-chat.donateButton.text-color": "#323842"
   });
@@ -150,19 +206,17 @@ function initKofi(): void {
   if (head === null) return;
 
   addKofiCss();
+  addFooterKofi();
   queueKofi();
   window.addEventListener("resize", queueKofi);
   window.addEventListener("scroll", queueKofi, { passive: true });
   new ResizeObserver(queueKofi).observe(head);
+  wide.addEventListener("change", () => requestAnimationFrame(drawKofi));
 
-  const obs = new MutationObserver(() => {
-    if (!hasKofi()) return;
-    queueKofi();
-    obs.disconnect();
-  });
+  const obs = new MutationObserver(queueKofi);
   obs.observe(document.body, { childList: true, subtree: true });
+  window.setTimeout(() => obs.disconnect(), 2000);
 
-  if (hasKofi()) return;
   if (window.kofiWidgetOverlay) {
     drawKofi();
     return;
