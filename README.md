@@ -7,6 +7,7 @@ Without `--text`, the CLI creates a random 64-byte token and encodes its upperca
 ## Install
 
 ```bash
+git submodule update --init --recursive
 bun install
 bun run check
 ```
@@ -69,6 +70,7 @@ See the [embedding guide](docs/embed.md).
 ```bash
 bun run site:check
 bun run site:build
+bun run site:test
 bun run site:dev
 ```
 
@@ -82,12 +84,14 @@ The Pages app provides:
 - clean extensionless navigation
 - experimental hollow-edge, distance-sensitive rendering
 
-`site/build.ts` bundles all browser TypeScript and the QR dependency into ignored JavaScript artefacts. The only authored JavaScript source retained in the repository is the embed loader template.
+The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour and README renderer. Braille QR keeps its current page markup, application code, embed API and project CSS locally.
+
+`site/build.ts` bundles the Braille QR browser code and embed API into a temporary Pages source tree, then delegates route and shared-runtime generation to `pages.config.ts`. Generated artefacts remain ignored.
 
 GitHub workflows:
 
-- [CI](.github/workflows/ci.yml) checks the CLI and site, then bundles the front end.
-- [Pages](.github/workflows/pages.yml) builds and deploys `site/dist` from `main`.
+- [CI](.github/workflows/ci.yml) validates pull requests without deploying them.
+- [Pages](.github/workflows/pages.yml) checks, builds and deploys `site/dist` from `main`.
 
 ## Hollow edges
 
