@@ -4,6 +4,9 @@ export default definePages({
   source: "site/.pages-src",
   out: "site/dist",
   assets: "assets/pages",
+  copy: [
+    { from: "version.json", to: "version.json" }
+  ],
   pages: [
     { from: "index.html", route: "/" },
     {
@@ -48,6 +51,12 @@ export default definePages({
       background: "#5bc0de",
       text: "#323842",
       wideAt: 721
+    },
+    version: {
+      file: "version.json",
+      selector: "[data-version]",
+      prefix: "v",
+      fallback: "v?"
     },
     readme: {
       owner: "kitty-crow",

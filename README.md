@@ -84,7 +84,7 @@ The Pages app provides:
 - clean extensionless navigation
 - experimental hollow-edge, distance-sensitive rendering
 
-The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour and README renderer. Braille QR keeps its current page markup, application code, embed API and project CSS locally.
+The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour, footer version loading and README renderer. Braille QR keeps its current page markup, application code, embed API and project CSS locally.
 
 `site/build.ts` bundles the Braille QR browser code and embed API into a temporary Pages source tree, then delegates route and shared-runtime generation to `pages.config.ts`. Generated artefacts remain ignored.
 
@@ -92,6 +92,15 @@ GitHub workflows:
 
 - [CI](.github/workflows/ci.yml) validates pull requests without deploying them.
 - [Pages](.github/workflows/pages.yml) checks, builds and deploys `site/dist` from `main`.
+- [Chore version](.github/workflows/version.yml) increments `package.json` and `version.json`, tags the release and deploys the matching footer version.
+
+## Versioning
+
+`package.json` and `version.json` must contain the same semantic version. The Pages footer reads the deployed `version.json` at runtime.
+
+```bash
+bun run version:check
+```
 
 ## Hollow edges
 

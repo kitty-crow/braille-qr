@@ -13,6 +13,7 @@ on:
       - "vendor/pages"
       - ".gitmodules"
       - "pages.config.ts"
+      - "version.json"
       - "package.json"
       - "bun.lock"
       - ".github/workflows/pages.yml"
