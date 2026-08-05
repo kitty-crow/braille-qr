@@ -6,47 +6,19 @@
   <meta name="description" content="Generate dense Unicode Braille QR codes in your browser.">
   <meta name="theme-color" content="#087f9c">
   <title>Braille QR</title>
-  <script src="./assets/boot.js"></script>
   <link rel="icon" href="./logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./fixes.css">
   <link rel="stylesheet" href="./skin.css">
   <link rel="stylesheet" href="./content.css">
-  <style>
-    .floatingchat-container-wrap,
-    .floatingchat-container-wrap-mobi {
-      left: auto !important;
-      right: 16px !important;
-      width: fit-content !important;
-      overflow: visible !important;
-    }
-
-    .floatingchat-container-wrap > iframe,
-    .floatingchat-container-wrap-mobi > iframe {
-      width: 230px !important;
-    }
-
-    .floating-chat-kofi-popup-iframe,
-    .floating-chat-kofi-popup-iframe-mobi,
-    .floating-chat-kofi-popup-iframe-closer-mobi {
-      left: auto !important;
-      right: 16px !important;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/marked@18.0.7/lib/marked.umd.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
-  <script type="module" src="./assets/routes.js"></script>
-  <script type="module" src="./assets/theme.js"></script>
-  <script type="module" src="./assets/app.js"></script>
-  <script type="module" src="./assets/embed-view.js"></script>
+  <!-- pages:head -->
 </head>
 <body>
   <a class="skip" href="#generator">Skip to generator</a>
   <header class="header">
     <div class="header__inner">
       <a class="brand" href="./" aria-label="Braille QR home"><img src="./logo.svg" alt=""><span>Braille <span>QR</span></span></a>
-      <nav class="nav" aria-label="Primary navigation"><a href="#generator">Generator</a><a href="#how">How it works</a><a href="#about">About</a><a href="./readme">README</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
+      <nav class="nav" aria-label="Primary navigation"><a href="#generator">Generator</a><a href="#how">How it works</a><a href="#about">About</a><a href="./readme/">README</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
       <button class="theme" type="button" data-theme-toggle aria-pressed="false"><span class="theme__track" aria-hidden="true"><span class="theme__thumb"></span></span><span data-theme-label aria-hidden="true">☀️</span></button>
     </div>
   </header>
@@ -99,19 +71,13 @@
       <div class="about-home__grid">
         <article class="about-home__card panel"><h3>Text first</h3><p>Copy the result into terminals, messages and documents without exporting an image, or download a standalone HTML file when exact browser rendering matters.</p></article>
         <article class="about-home__card panel"><h3>Deliberately small</h3><p>The project focuses on QR encoding, dot scaling and Braille packing rather than adding an application framework around a compact utility.</p></article>
-        <article class="about-home__card panel"><h3>Open project</h3><p>Released under the MIT Licence and authored by Kitty Crow. The full usage guide, CLI options and implementation notes live in the repository README.</p><div class="about-home__actions"><a class="button button--primary" href="./readme">Read the README</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">Browse source</a></div></article>
+        <article class="about-home__card panel"><h3>Open project</h3><p>Released under the MIT Licence and authored by Kitty Crow. The full usage guide, CLI options and implementation notes live in the repository README.</p><div class="about-home__actions"><a class="button button--primary" href="./readme/">Read the README</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">Browse source</a></div></article>
       </div>
     </section>
   </main>
-  <footer class="footer"><span>MIT licensed · Built by <a href="https://kittycrow.dev">Kitty Crow</a></span><span><a href="#about">About</a> · <a href="./readme">README</a> · <a href="https://github.com/kitty-crow/braille-qr">GitHub</a></span></footer>
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-  <script>
-    kofiWidgetOverlay.draw('kittycrow', {
-      'type': 'floating-chat',
-      'floating-chat.donateButton.text': 'Buy me a coffee?',
-      'floating-chat.donateButton.background-color': '#5bc0de',
-      'floating-chat.donateButton.text-color': '#323842'
-    });
-  </script>
+  <footer class="footer"><span>MIT licensed · Built by <a href="https://kittycrow.dev">Kitty Crow</a></span><span><a href="#about">About</a> · <a href="./readme/">README</a> · <a href="https://github.com/kitty-crow/braille-qr">GitHub</a></span></footer>
+  <!-- pages:body -->
+  <script type="module" src="./assets/app.js"></script>
+  <script type="module" src="./assets/embed-view.js"></script>
 </body>
 </html>

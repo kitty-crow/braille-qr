@@ -18,9 +18,10 @@
     "build": "bunx tsc -p tsconfig.json",
     "site:check": "bunx tsc -p site/tsconfig.json --noEmit && bunx tsc -p site/tsconfig.bun.json --noEmit",
     "site:build": "bun run site/build.ts",
+    "site:test": "bun test site/tests",
     "site:dev": "bun run site/build.ts && bun run site/serve.ts",
     "embed": "bun run src/main.ts --embed",
-    "site:ci": "bun run check && bun run site:check && bun run site:build"
+    "site:ci": "bun run check && bun run site:check && bun run site:build && bun run site:test"
   },
   "dependencies": {
     "qrcode": "^1.5.4"

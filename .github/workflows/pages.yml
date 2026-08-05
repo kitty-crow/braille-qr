@@ -10,6 +10,9 @@ on:
       - "src/types.ts"
       - "src/ext/qrcode.d.ts"
       - "templates/embed/**"
+      - "vendor/pages"
+      - ".gitmodules"
+      - "pages.config.ts"
       - "package.json"
       - "bun.lock"
       - ".github/workflows/pages.yml"
@@ -30,14 +33,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
       - name: Install
         run: bun install
-      - name: Check
-        run: bun run site:check
-      - name: Build
-        run: bun run site:build
+      - name: Check and build
+        run: bun run site:ci
       - name: Set up Pages
         uses: actions/configure-pages@v5
       - name: Upload site

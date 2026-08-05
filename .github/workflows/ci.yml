@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -15,21 +13,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
       - name: Install
         run: bun install
-      - name: Check CLI
-        run: bun run check
-      - name: Check site
-        run: bun run site:check
-      - name: Bundle site
-        run: bun run site:build
+      - name: Check and bundle
+        run: bun run site:ci
       - name: Confirm generated files are untracked
         run: |
           test -f site/dist/assets/app.js
-          test -f site/dist/assets/boot.js
+          test -f site/dist/assets/pages/boot.js
+          test -f site/dist/assets/pages/runtime.js
           test -f site/dist/v1/embed.js
           test -f site/dist/v1/load.js
           test -f site/dist/v1/embed.css
-          test -z "$(git ls-files site/dist build output)"
+          test -z "$(git ls-files site/dist site/.pages-src build output)"

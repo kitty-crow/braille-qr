@@ -176,6 +176,20 @@
   background: var(--surface-muted);
 }
 
+.pages-kofi-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.pages-kofi-link > img {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
 @media (max-width: 850px) {
   .workspace__left {
     display: contents;
