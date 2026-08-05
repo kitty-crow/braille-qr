@@ -27,6 +27,7 @@ test("builds the existing routes through the template", async () => {
     "generate/index.html",
     "generate.html",
     "404.html",
+    "version.json",
     "assets/app.js",
     "assets/embed-view.js",
     "assets/pages/boot.js",
@@ -51,7 +52,18 @@ test("keeps project layout and application assets local", async () => {
   expect(home).toContain("QR codes,<br>rendered as text.");
   expect(home).toContain('src="./assets/app.js"');
   expect(home).toContain('src="./assets/pages/runtime.js"');
+  expect(home).toContain("data-version");
   expect(readme).toContain("Braille QR documentation");
   expect(readme).toContain('href="../styles.css"');
   expect(readme).toContain('src="../assets/pages/runtime.js"');
+  expect(readme).toContain("data-version");
+});
+
+test("keeps package and footer versions aligned", async () => {
+  const pkg = await Bun.file(join(root, "package.json")).json() as { readonly version: string };
+  const source = await Bun.file(join(root, "version.json")).json() as { readonly version: string };
+  const built = await Bun.file(join(dist, "version.json")).json() as { readonly version: string };
+
+  expect(source.version).toBe(pkg.version);
+  expect(built.version).toBe(pkg.version);
 });
