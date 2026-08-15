@@ -63,7 +63,7 @@ test("keeps project layout and application assets local", async () => {
   expect(embedView).toContain("Self-contained no-JavaScript HTML copied.");
 });
 
-test("no-JavaScript embed is literal self-contained HTML with compact-matching geometry", () => {
+test("no-JavaScript embed is formatted literal self-contained HTML with compact-matching geometry", () => {
   const html = staticEmbedHtml({
     text: "https://kittycrow.dev",
     scale: 4,
@@ -76,6 +76,9 @@ test("no-JavaScript embed is literal self-contained HTML with compact-matching g
   expect(html).toContain("container-type:inline-size");
   expect(html).toContain("width:min(100%,24rem);aspect-ratio:1");
   expect(html).toContain("place-items:center");
+  expect(html).toContain(">\n  <div style=");
+  expect(html).toContain("\n    <div style=");
+  expect(html.endsWith("\n</div>")).toBe(true);
   expect(html).not.toContain("32rem");
   expect(html).not.toMatch(/<script\b/iu);
   expect(html).not.toMatch(/<link\b/iu);
