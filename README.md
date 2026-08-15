@@ -61,7 +61,7 @@ bun run qr \
 
 The result is one paste-ready host div. It links to the versioned GitHub Pages CSS, loader and bundled browser API, while the consuming website controls the size and position of the outer div.
 
-The web generator shows the same fragment in a read-only, syntax-highlighted panel and copies the untouched plain HTML.
+The web generator's embed panel has **Compact** and **No JavaScript** tabs. Compact shows and copies the existing runtime-backed fragment. No JavaScript expands the current QR into literal Braille plus inline CSS only, with no script, external stylesheet, external asset or network fetch; the same copy button copies whichever tab is selected. The static form is deliberately much more verbose and cannot perform the compact runtime's font-metric calibration.
 
 See the [embedding guide](docs/embed.md).
 

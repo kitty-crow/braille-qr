@@ -1,8 +1,10 @@
 import { Tpl } from "../../src/embed/tpl.js";
 import type { EmbedTpl, EmbedTheme } from "../../src/embed/types.js";
 import type { Draw, Ec } from "../../src/types.js";
+import { staticEmbedHtml } from "./static-embed.js";
 
 const tpl: EmbedTpl = { html: __EMBED_HTML__ };
+type Mode = "compact" | "static";
 
 interface MarkedApi {
   parse(src: string): string;
@@ -33,10 +35,15 @@ class EmbedView {
   private readonly copy = this.el<HTMLButtonElement>("[data-copy-embed]");
   private readonly status = this.el<HTMLElement>("[data-status]");
   private raw = "";
+  private staticRaw = "";
+  private mode: Mode = "compact";
   private timer: number | undefined;
+  private compactTab: HTMLButtonElement | null = null;
+  private staticTab: HTMLButtonElement | null = null;
 
   run(): void {
     const form = this.el<HTMLFormElement>("[data-gen-form]");
+    this.mountTabs();
     form.addEventListener("input", () => this.queue());
     form.addEventListener("change", () => this.queue(0));
     form.addEventListener("reset", () => window.setTimeout(() => this.make()));
@@ -45,6 +52,52 @@ class EmbedView {
       capture: true,
     });
     this.make();
+  }
+
+  private mountTabs(): void {
+    const tabs = document.createElement("div");
+    tabs.className = "embed-format-tabs";
+    tabs.setAttribute("role", "tablist");
+    tabs.setAttribute("aria-label", "Embed format");
+    tabs.style.cssText = "display:flex;gap:.4rem;margin:.55rem 0 .45rem";
+    this.compactTab = this.tab("Compact", "compact", true);
+    this.staticTab = this.tab("No JavaScript", "static", false);
+    tabs.append(this.compactTab, this.staticTab);
+    this.view.before(tabs);
+  }
+
+  private tab(label: string, mode: Mode, selected: boolean): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `button ${selected ? "button--primary" : "button--secondary"}`;
+    button.style.cssText = "min-height:2rem;padding:.4rem .7rem;font-size:.75rem;line-height:1";
+    button.textContent = label;
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-selected", String(selected));
+    if (mode === "static") button.title = "Self-contained literal Braille QR with inline CSS only; no JavaScript or external fetching.";
+    button.addEventListener("click", () => this.select(mode));
+    return button;
+  }
+
+  private select(mode: Mode): void {
+    if (this.mode === mode) return;
+    this.mode = mode;
+    this.syncTabs();
+    if (!this.raw) {
+      this.make();
+      return;
+    }
+    this.render(mode === "compact" ? this.raw : this.staticHtml());
+  }
+
+  private syncTabs(): void {
+    const compact = this.mode === "compact";
+    this.compactTab?.setAttribute("aria-selected", String(compact));
+    this.staticTab?.setAttribute("aria-selected", String(!compact));
+    this.compactTab?.classList.toggle("button--primary", compact);
+    this.compactTab?.classList.toggle("button--secondary", !compact);
+    this.staticTab?.classList.toggle("button--primary", !compact);
+    this.staticTab?.classList.toggle("button--secondary", compact);
   }
 
   private queue(delay = 90): void {
@@ -59,6 +112,7 @@ class EmbedView {
     const text = this.text.value.trim();
     if (!text) {
       this.raw = "";
+      this.staticRaw = "";
       this.render("");
       return "";
     }
@@ -74,8 +128,23 @@ class EmbedView {
     }, tpl);
 
     this.raw = html;
-    this.render(html);
+    this.staticRaw = "";
+    this.render(this.mode === "compact" ? html : this.staticHtml());
     return html;
+  }
+
+  private staticHtml(): string {
+    if (this.staticRaw) return this.staticRaw;
+    const text = this.text.value.trim();
+    if (!text) return "";
+    this.staticRaw = staticEmbedHtml({
+      text,
+      scale: Number(this.scale.value),
+      ec: this.ecVal(this.ec.value),
+      draw: this.drawVal(this.draw.value),
+      dark: this.dark.checked,
+    });
+    return this.staticRaw;
   }
 
   private render(html: string): void {
@@ -137,7 +206,7 @@ class EmbedView {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    const html = this.raw || this.make();
+    const html = this.mode === "static" ? this.staticHtml() : (this.raw || this.make());
     if (!html.trim()) {
       this.status.textContent = "Nothing to copy.";
       return;
@@ -145,7 +214,9 @@ class EmbedView {
 
     try {
       await this.clip(html);
-      this.status.textContent = "Paste-ready embed div copied.";
+      this.status.textContent = this.mode === "static"
+        ? "Self-contained no-JavaScript HTML copied."
+        : "Paste-ready embed div copied.";
     } catch (err: unknown) {
       this.status.textContent = err instanceof Error ? err.message : String(err);
     }
