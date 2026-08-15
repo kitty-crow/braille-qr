@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { join } from "node:path";
+import { staticEmbedHtml } from "../src/static-embed.ts";
 
 const root = join(import.meta.dir, "..", "..");
 const dist = join(root, "site", "dist");
@@ -48,6 +49,7 @@ test("builds the existing routes through the template", async () => {
 test("keeps project layout and application assets local", async () => {
   const home = await Bun.file(join(dist, "index.html")).text();
   const readme = await Bun.file(join(dist, "readme", "index.html")).text();
+  const embedView = await Bun.file(join(dist, "assets", "embed-view.js")).text();
 
   expect(home).toContain("QR codes,<br>rendered as text.");
   expect(home).toContain('src="./assets/app.js"');
@@ -57,6 +59,27 @@ test("keeps project layout and application assets local", async () => {
   expect(readme).toContain('href="../styles.css"');
   expect(readme).toContain('src="../assets/pages/runtime.js"');
   expect(readme).toContain("data-version");
+  expect(embedView).toContain("No JavaScript");
+  expect(embedView).toContain("Self-contained no-JavaScript HTML copied.");
+});
+
+test("no-JavaScript embed is literal self-contained HTML with inline CSS only", () => {
+  const html = staticEmbedHtml({
+    text: "https://kittycrow.dev",
+    scale: 4,
+    ec: "H",
+    draw: "fill",
+    dark: false,
+  });
+  expect(html).toContain('role="img"');
+  expect(html).toContain("Braille QR code");
+  expect(html).toContain("container-type:inline-size");
+  expect(html).not.toMatch(/<script\b/iu);
+  expect(html).not.toMatch(/<link\b/iu);
+  expect(html).not.toMatch(/\bsrc=/iu);
+  expect(html).not.toMatch(/\bhref=/iu);
+  expect(html).not.toMatch(/url\s*\(/iu);
+  expect(html).not.toMatch(/https?:/iu);
 });
 
 test("keeps package and footer versions aligned", async () => {
