@@ -1,6 +1,6 @@
 {
   "name": "braille-qr",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "description": "Generate dense Unicode Braille QR codes as terminal text, self-contained HTML, or a browser app.",
