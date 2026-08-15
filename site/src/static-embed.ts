@@ -25,7 +25,6 @@ export const staticEmbedHtml = (cfg: StaticEmbedCfg): string => {
   const code = new Braille().make(new Dots().make(mat, cfg.scale, cfg.draw, 1));
   const cols = Math.max(1, code.cols);
   const rowsCount = Math.max(1, code.rows);
-  // Compact uses a 24rem square host and fits against both width/cols and height/(rows*2).
   const fitCells = Math.max(cols, rowsCount * 2);
   const fallbackCell = 384 / fitCells;
   const cellH = `${(200 / fitCells).toFixed(8)}cqw`;
@@ -39,7 +38,13 @@ export const staticEmbedHtml = (cfg: StaticEmbedCfg): string => {
   const rows = code.chars().map(line => {
     const cells = line.map(char => `<span style="display:grid;place-items:center;min-width:0;height:${fallbackH};height:${cellH};line-height:${fallbackH};line-height:${cellH};font-size:${fallbackFont};font-size:${fontSize};white-space:pre;overflow:visible">${esc(char)}</span>`).join("");
     return `<div style="display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));width:100%;height:${fallbackH};height:${cellH};overflow:visible">${cells}</div>`;
-  }).join("");
+  });
 
-  return `<div role="img" aria-label="Braille QR code" style="display:grid;place-items:center;width:min(100%,24rem);aspect-ratio:1;container-type:inline-size;overflow:hidden;background:${bg};color:${fg};font-family:${fonts};font-weight:400;font-synthesis:none;font-variant-ligatures:none;letter-spacing:0;text-rendering:geometricPrecision"><div style="width:${(cols * fallbackCell).toFixed(4)}px;width:${gridWidth};overflow:visible">${rows}</div></div>`;
+  return [
+    `<div role="img" aria-label="Braille QR code" style="display:grid;place-items:center;width:min(100%,24rem);aspect-ratio:1;container-type:inline-size;overflow:hidden;background:${bg};color:${fg};font-family:${fonts};font-weight:400;font-synthesis:none;font-variant-ligatures:none;letter-spacing:0;text-rendering:geometricPrecision">`,
+    `  <div style="width:${(cols * fallbackCell).toFixed(4)}px;width:${gridWidth};overflow:visible">`,
+    ...rows.map(row => `    ${row}`),
+    "  </div>",
+    "</div>",
+  ].join("\n");
 };
