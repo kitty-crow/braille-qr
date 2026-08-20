@@ -11,7 +11,7 @@ interface Cfg {
 
 class Args {
   parse(argv: readonly string[]): Cfg {
-    let path = "output/braille-qr.html";
+    let path = "output/unicode-qr-studio.html";
     let open = false;
 
     for (const arg of argv) {
@@ -35,7 +35,7 @@ class Args {
 Serves a generated HTML QR page on a random available local port.
 
 Arguments:
-  path       HTML file to serve (default: output/braille-qr.html)
+  path       HTML file to serve (default: output/unicode-qr-studio.html)
 
 Options:
   --open     Open the page in the default browser
