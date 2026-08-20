@@ -3,9 +3,9 @@
 GitHub Pages publishes the browser assets at:
 
 ```text
-https://kitty-crow.github.io/braille-qr/v1/embed.js
-https://kitty-crow.github.io/braille-qr/v1/embed.css
-https://kitty-crow.github.io/braille-qr/v1/load.js
+https://kitty-crow.github.io/unicode-qr-studio/v1/embed.js
+https://kitty-crow.github.io/unicode-qr-studio/v1/embed.css
+https://kitty-crow.github.io/unicode-qr-studio/v1/load.js
 ```
 
 `embed.js` contains the QR dependency and runs entirely in the visitor's browser. No application server is required.
@@ -41,7 +41,7 @@ Use a different published API location:
 bun run qr \
   --text "https://kittycrow.dev" \
   --embed \
-  --embed-src "https://example.com/braille-qr/embed.js"
+  --embed-src "https://example.com/unicode-qr-studio/embed.js"
 ```
 
 The CLI derives sibling `embed.css` and `load.js` URLs from the supplied API URL.
@@ -49,7 +49,7 @@ The CLI derives sibling `embed.css` and `load.js` URLs from the supplied API URL
 ## Generated route
 
 ```text
-https://kitty-crow.github.io/braille-qr/generate?text=Hello
+https://kitty-crow.github.io/unicode-qr-studio/generate?text=Hello
 ```
 
 Supported parameters:
@@ -66,7 +66,7 @@ theme
 Fragment parameters take precedence and keep the payload out of the HTTP request:
 
 ```text
-https://kitty-crow.github.io/braille-qr/generate#text=SECRET
+https://kitty-crow.github.io/unicode-qr-studio/generate#text=SECRET
 ```
 
 ## Templates
