@@ -1,6 +1,6 @@
 {
   "name": "braille-qr",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "type": "module",
   "description": "Generate dense Unicode Braille QR codes as terminal text, self-contained HTML, or a browser app.",
@@ -20,7 +20,6 @@
     "site:check": "bunx tsc -p site/tsconfig.json --noEmit && bunx tsc -p site/tsconfig.bun.json --noEmit",
     "site:build": "bun run site/build.ts",
     "site:test": "bun test site/tests",
-    "site:dev": "bun run site/build.ts && bun run site/serve.ts",
     "embed": "bun run src/main.ts --embed",
     "site:ci": "bun run version:check && bun run check && bun run site:check && bun run site:build && bun run site:test"
   },
