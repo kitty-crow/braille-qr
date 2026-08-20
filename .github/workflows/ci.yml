@@ -21,6 +21,36 @@ jobs:
         run: bun install
       - name: Check and bundle
         run: bun run site:ci
+      - name: Browser runtime smoke
+        run: |
+          set -euxo pipefail
+          python3 -m http.server 8123 --directory site/dist >/tmp/unicode-qr-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8123/ >/dev/null; then break; fi
+            sleep .2
+          done
+          chrome="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          "$chrome" \
+            --headless=new \
+            --no-sandbox \
+            --disable-gpu \
+            --enable-logging=stderr \
+            --v=1 \
+            --virtual-time-budget=2500 \
+            --dump-dom \
+            http://127.0.0.1:8123/ \
+            >/tmp/unicode-qr-dom.html \
+            2>/tmp/unicode-qr-chrome.log || true
+          echo '=== browser log ==='
+          grep -E 'CONSOLE|Uncaught|TypeError|ReferenceError|SyntaxError|Error:' /tmp/unicode-qr-chrome.log || true
+          echo '=== dynamic markers ==='
+          grep -o 'mini-grid\|qr-grid\|Unicode cells\|embed-format-tabs' /tmp/unicode-qr-dom.html | sort | uniq -c || true
+          test -s /tmp/unicode-qr-dom.html
+          grep -q 'mini-grid' /tmp/unicode-qr-dom.html
+          grep -q 'qr-grid' /tmp/unicode-qr-dom.html
+          grep -q 'Unicode cells' /tmp/unicode-qr-dom.html
       - name: Confirm generated files are untracked
         run: |
           test -f site/dist/assets/app.js
