@@ -20,6 +20,7 @@
     "site:check": "bunx tsc -p site/tsconfig.json --noEmit && bunx tsc -p site/tsconfig.bun.json --noEmit",
     "site:build": "bun run site/build.ts",
     "site:test": "bun test site/tests",
+    "site:e2e": "bun run site/tests/browser.ts",
     "embed": "bun run src/main.ts --embed",
     "site:ci": "bun run version:check && bun run check && bun run site:check && bun run site:build && bun run site:test"
   },
@@ -33,6 +34,7 @@
     "@types/bun": "latest",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "playwright": "^1.55.0",
     "typescript": "^5.8.3"
   },
   "engines": {
