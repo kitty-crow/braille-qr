@@ -7,7 +7,8 @@ import { build as buildPages, load } from "../vendor/pages/src/index.ts";
 
 const root = import.meta.dir;
 const repo = join(root, "..");
-const src = join(root, "src");
+const browser = join(root, "src");
+const styles = join(root, "styles");
 const stage = join(root, ".pages-src");
 const out = join(root, "dist");
 const assets = join(stage, "assets");
@@ -27,8 +28,8 @@ try {
 
   const app = await Bun.build({
     entrypoints: [
-      join(src, "app.ts"),
-      join(src, "embed-view.ts")
+      join(browser, "app.ts"),
+      join(browser, "embed-view.ts")
     ],
     outdir: assets,
     target: "browser",
@@ -43,7 +44,7 @@ try {
   });
 
   const embed = await Bun.build({
-    entrypoints: [join(src, "embed.ts")],
+    entrypoints: [join(browser, "embed.ts")],
     outdir: api,
     target: "browser",
     format: "iife",
@@ -60,16 +61,14 @@ try {
 
   await cp(join(tplDir, "embed.css"), join(api, "embed.css"));
   await cp(join(tplDir, "embed.js"), join(api, "load.js"));
+  await cp(styles, join(stage, "styles"), { recursive: true });
+  await cp(join(root, "logo.svg"), join(stage, "logo.svg"));
 
-  for (const file of ["styles.css", "fixes.css", "skin.css", "content.css", "logo.svg"]) {
-    await cp(join(src, file), join(stage, file));
+  for (const file of ["index.html", "readme.html", "404.html"]) {
+    await cp(join(root, file), join(stage, file));
   }
 
-  await cp(join(src, "index.html"), join(stage, "index.html"));
-  await cp(join(src, "readme.html"), join(stage, "readme.html"));
-  await cp(join(src, "404.html"), join(stage, "404.html"));
-
-  const pageTpl = await readFile(join(src, "generate.html"), "utf8");
+  const pageTpl = await readFile(join(root, "generate.html"), "utf8");
   const fill = new Tpl();
   const generated = fill.make({
     text: "https://kittycrow.dev",
