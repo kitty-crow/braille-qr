@@ -13,7 +13,7 @@ const DEF = {
   edge: 1,
   fmt: "term" as const,
   justify: true,
-  embedSrc: "https://kitty-crow.github.io/braille-qr/v1/embed.js",
+  embedSrc: "https://kitty-crow.github.io/unicode-qr-studio/v1/embed.js",
 };
 
 export class Args {
