@@ -2,11 +2,27 @@ import { Tpl } from "../../src/embed/tpl.js";
 import type { EmbedTpl, EmbedTheme } from "../../src/embed/types.js";
 import type { Draw, Ec } from "../../src/types.js";
 import { staticEmbedHtml } from "./static-embed.js";
-import { embedTabsFrag, plainCodeFrag } from "./ui/fragments.tsx";
-import { richHtmlFrag } from "./web/rich-code.ts";
 
 const tpl: EmbedTpl = { html: __EMBED_HTML__ };
 type Mode = "compact" | "static";
+
+interface MarkedApi {
+  parse(src: string): string;
+}
+
+interface PurifyApi {
+  sanitize(src: string): string;
+}
+
+interface HighlightApi {
+  highlightElement(el: HTMLElement): void;
+}
+
+interface Libs {
+  readonly marked: MarkedApi;
+  readonly purify: PurifyApi;
+  readonly highlight: HighlightApi;
+}
 
 class EmbedView {
   private readonly fill = new Tpl();
@@ -22,7 +38,6 @@ class EmbedView {
   private staticRaw = "";
   private mode: Mode = "compact";
   private timer: number | undefined;
-  private renderGeneration = 0;
   private compactTab: HTMLButtonElement | null = null;
   private staticTab: HTMLButtonElement | null = null;
 
@@ -40,17 +55,28 @@ class EmbedView {
   }
 
   private mountTabs(): void {
-    const frag = embedTabsFrag();
-    const tabs = frag.firstElementChild;
-    if (!(tabs instanceof HTMLElement)) throw new Error("Embed tab fragment is missing its root element.");
+    const tabs = document.createElement("div");
+    tabs.className = "embed-format-tabs";
+    tabs.setAttribute("role", "tablist");
+    tabs.setAttribute("aria-label", "Embed format");
+    tabs.style.cssText = "display:flex;gap:.4rem;margin:.55rem 0 .45rem";
+    this.compactTab = this.tab("Compact", "compact", true);
+    this.staticTab = this.tab("No JavaScript", "static", false);
+    tabs.append(this.compactTab, this.staticTab);
+    this.view.before(tabs);
+  }
 
-    this.compactTab = tabs.querySelector<HTMLButtonElement>('[data-embed-mode="compact"]');
-    this.staticTab = tabs.querySelector<HTMLButtonElement>('[data-embed-mode="static"]');
-    if (!this.compactTab || !this.staticTab) throw new Error("Embed format tabs are incomplete.");
-
-    this.compactTab.addEventListener("click", () => this.select("compact"));
-    this.staticTab.addEventListener("click", () => this.select("static"));
-    this.view.before(frag);
+  private tab(label: string, mode: Mode, selected: boolean): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `button ${selected ? "button--primary" : "button--secondary"}`;
+    button.style.cssText = "min-height:2rem;padding:.4rem .7rem;font-size:.75rem;line-height:1";
+    button.textContent = label;
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-selected", String(selected));
+    if (mode === "static") button.title = "Self-contained literal Unicode QR with inline CSS only; no JavaScript or external fetching.";
+    button.addEventListener("click", () => this.select(mode));
+    return button;
   }
 
   private select(mode: Mode): void {
@@ -122,25 +148,58 @@ class EmbedView {
   }
 
   private render(html: string): void {
-    const generation = ++this.renderGeneration;
     this.view.replaceChildren();
     this.view.scrollLeft = 0;
     if (!html) return;
-    void this.renderRich(html, generation);
-  }
 
-  private async renderRich(html: string, generation: number): Promise<void> {
+    const libs = this.libs();
+    if (libs === null) {
+      this.plain(html);
+      return;
+    }
+
     try {
-      const frag = await richHtmlFrag(html);
-      if (generation !== this.renderGeneration) return;
-      this.view.replaceChildren(frag);
+      const md = `\`\`\`html\n${html}\n\`\`\``;
+      const safe = libs.purify.sanitize(libs.marked.parse(md));
+      this.view.innerHTML = safe;
+
+      const blocks = this.view.querySelectorAll<HTMLElement>("pre code");
+      if (blocks.length === 0) {
+        this.plain(html);
+        return;
+      }
+
+      blocks.forEach((block) => libs.highlight.highlightElement(block));
     } catch {
-      if (generation === this.renderGeneration) this.plain(html);
+      this.plain(html);
     }
   }
 
   private plain(html: string): void {
-    this.view.replaceChildren(plainCodeFrag(html));
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.className = "language-html";
+    code.textContent = html;
+    pre.append(code);
+    this.view.replaceChildren(pre);
+  }
+
+  private libs(): Libs | null {
+    const win = window as unknown as {
+      readonly marked?: MarkedApi;
+      readonly DOMPurify?: PurifyApi;
+      readonly hljs?: HighlightApi;
+    };
+
+    if (win.marked === undefined || win.DOMPurify === undefined || win.hljs === undefined) {
+      return null;
+    }
+
+    return {
+      marked: win.marked,
+      purify: win.DOMPurify,
+      highlight: win.hljs,
+    };
   }
 
   private async copyOut(event: Event): Promise<void> {
