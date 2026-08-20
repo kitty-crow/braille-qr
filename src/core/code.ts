@@ -7,7 +7,7 @@ export class Code {
 
   constructor(lines: readonly string[]) {
     if (lines.length === 0) {
-      throw new Error("Braille code must contain at least one row.");
+      throw new Error("Unicode QR code must contain at least one row.");
     }
 
     this.cols = Math.max(...lines.map((line) => [...line].length));
