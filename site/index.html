@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Generate dense Unicode Braille QR codes in your browser.">
+  <meta name="description" content="Generate dense text-rendered Unicode QR codes in your browser.">
   <meta name="theme-color" content="#087f9c">
-  <title>Braille QR</title>
+  <title>Unicode QR Studio</title>
   <link rel="icon" href="./logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles/styles.css">
   <link rel="stylesheet" href="./styles/fixes.css">
@@ -17,7 +17,7 @@
   <a class="skip" href="#generator">Skip to generator</a>
   <header class="header">
     <div class="header__inner">
-      <a class="brand" href="./" aria-label="Braille QR home"><img src="./logo.svg" alt=""><span>Braille <span>QR</span></span></a>
+      <a class="brand" href="./" aria-label="Unicode QR Studio home"><img src="./logo.svg" alt=""><span>Unicode QR <span>Studio</span></span></a>
       <nav class="nav" aria-label="Primary navigation"><a href="#generator">Generator</a><a href="#how">How it works</a><a href="#about">About</a><a href="./readme/">README</a><a href="https://github.com/kitty-crow/braille-qr">GitHub</a></nav>
       <button class="theme" type="button" data-theme-toggle aria-pressed="false"><span class="theme__track" aria-hidden="true"><span class="theme__thumb"></span></span><span data-theme-label aria-hidden="true">☀️</span></button>
     </div>
@@ -27,10 +27,10 @@
       <div class="hero__copy">
         <p class="eyebrow">Dense Unicode QR generator</p>
         <h1>QR codes,<br>rendered as text.</h1>
-        <p class="lead">Turn links, messages and cryptographic tokens into scan-ready Unicode Braille. Generate in the browser, copy to a terminal, or download a self-contained HTML page.</p>
+        <p class="lead">Turn links, messages and cryptographic tokens into scan-ready Unicode text. Generate in the browser, copy to a terminal, or download a self-contained HTML page.</p>
         <div class="hero__actions"><a class="button button--primary" href="#generator">Jump to generator</a><a class="button button--secondary" href="#about">About the project</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">View source</a></div>
       </div>
-      <div class="hero__visual panel" aria-label="Justified Braille QR example"><span class="hero__orb hero__orb--a" aria-hidden="true"></span><span class="hero__orb hero__orb--b" aria-hidden="true"></span><div class="mini-code" data-mini></div></div>
+      <div class="hero__visual panel" aria-label="Justified Unicode QR example"><span class="hero__orb hero__orb--a" aria-hidden="true"></span><span class="hero__orb hero__orb--b" aria-hidden="true"></span><div class="mini-code" data-mini></div></div>
     </section>
 
     <section id="generator" class="workspace" aria-labelledby="generator-title">
@@ -47,11 +47,11 @@
         </form>
 
         <section id="how" class="how-compact panel" aria-labelledby="how-title">
-          <header class="how-compact__head"><p class="eyebrow">How it works</p><h2 id="how-title">From matrix to Braille</h2></header>
+          <header class="how-compact__head"><p class="eyebrow">How it works</p><h2 id="how-title">From matrix to Unicode cells</h2></header>
           <div class="how-compact__steps">
             <article class="how-step"><span class="how-step__icon">01</span><div><h3>Encode</h3><p>Generate a standards-compliant QR matrix with the selected correction level.</p></div></article>
             <article class="how-step"><span class="how-step__icon">02</span><div><h3>Supersample</h3><p>Expand every module into a dense dot block while preserving the quiet zone.</p></div></article>
-            <article class="how-step"><span class="how-step__icon">03</span><div><h3>Pack</h3><p>Map each two-by-four dot region into one fixed-width Unicode Braille character.</p></div></article>
+            <article class="how-step"><span class="how-step__icon">03</span><div><h3>Pack</h3><p>Map each two-by-four dot region into one fixed-width character from the Unicode Braille Patterns block.</p></div></article>
           </div>
           <aside class="how-compact__note"><strong>Distance-gated scanning</strong><span>Hollow edges can behave like a “step back to scan” code. That may suit signs, exhibits or installations intended to be read from a viewing distance rather than close-up.</span></aside>
         </section>
@@ -59,7 +59,7 @@
 
       <article class="preview panel">
         <header class="preview__head"><div><p class="eyebrow">Live preview</p><h2>Scan or export</h2></div><div class="metrics" data-metrics></div></header>
-        <div class="preview__frame"><div class="preview__empty" data-empty><h3>Your QR appears here</h3><p>Enter text or create a token to preview the justified Braille grid.</p></div><div class="qr" data-preview hidden></div></div>
+        <div class="preview__frame"><div class="preview__empty" data-empty><h3>Your QR appears here</h3><p>Enter text or create a token to preview the justified Unicode grid.</p></div><div class="qr" data-preview hidden></div></div>
         <div class="preview__actions"><button class="button button--secondary" type="button" data-copy disabled>Copy text</button><button class="button button--secondary" type="button" data-download-text disabled>Download .txt</button><button class="button button--secondary" type="button" data-copy-embed disabled>Copy embed div</button><button class="button button--primary" type="button" data-download-html disabled>Download HTML</button></div>
         <div class="embed-code field"><span class="field__label" id="embed-code-label">Embed div</span><div class="embed-code__view" data-embed-view role="textbox" aria-readonly="true" aria-labelledby="embed-code-label" tabindex="0"></div></div>
         <p class="sr-only" role="status" aria-live="polite" data-status></p>
@@ -67,10 +67,10 @@
     </section>
 
     <section id="about" class="section about-home" aria-labelledby="about-title">
-      <div class="section__head"><p class="eyebrow">About</p><h2 id="about-title">A real QR matrix in Unicode Braille.</h2><p class="lead">Braille QR preserves the geometry of a standards-compliant QR code while packing its dots into fixed-width text characters. The same TypeScript core powers the browser generator, command-line tool and embeddable output.</p></div>
+      <div class="section__head"><p class="eyebrow">About</p><h2 id="about-title">A real QR matrix rendered as Unicode text.</h2><p class="lead">Unicode QR Studio preserves the geometry of a standards-compliant QR code while packing its dots into fixed-width text characters. The same TypeScript core powers the browser generator, command-line tool and embeddable output.</p></div>
       <div class="about-home__grid">
         <article class="about-home__card panel"><h3>Text first</h3><p>Copy the result into terminals, messages and documents without exporting an image, or download a standalone HTML file when exact browser rendering matters.</p></article>
-        <article class="about-home__card panel"><h3>Deliberately small</h3><p>The project focuses on QR encoding, dot scaling and Braille packing rather than adding an application framework around a compact utility.</p></article>
+        <article class="about-home__card panel"><h3>Deliberately small</h3><p>The project focuses on QR encoding, dot scaling and Unicode packing rather than adding an application framework around a compact utility.</p></article>
         <article class="about-home__card panel"><h3>Open project</h3><p>Released under the MIT Licence and authored by Kitty Crow. The full usage guide, CLI options and implementation notes live in the repository README.</p><div class="about-home__actions"><a class="button button--primary" href="./readme/">Read the README</a><a class="button button--secondary" href="https://github.com/kitty-crow/braille-qr">Browse source</a></div></article>
       </div>
     </section>
