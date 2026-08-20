@@ -1,10 +1,10 @@
 # Output formats
 
-Braille QR supports terminal text, self-contained HTML and paste-ready embeds.
+Unicode QR Studio supports terminal text, self-contained HTML and paste-ready embeds.
 
 ## Terminal
 
-Terminal text is the default. Each Unicode Braille character carries a two-dot-wide by four-dot-high region of the supersampled QR matrix. Fixed-width justification is enabled by default.
+Terminal text is the default. Each Unicode Braille Patterns character carries a two-dot-wide by four-dot-high region of the supersampled QR matrix. Fixed-width justification is enabled by default.
 
 ```bash
 bun run qr --text "https://kittycrow.dev"
@@ -16,7 +16,7 @@ bun run qr --text "https://kittycrow.dev"
 bun run qr --text "https://kittycrow.dev" --html
 ```
 
-The HTML renderer measures the selected Braille font and preserves the native two-by-four cell ratio so the underlying QR modules remain square.
+The HTML renderer measures the selected glyph font and preserves the native two-by-four cell ratio so the underlying QR modules remain square.
 
 ## Dark mode
 
@@ -24,7 +24,7 @@ The HTML renderer measures the selected Braille font and preserves the native tw
 bun run qr --text "https://kittycrow.dev" --html --dark
 ```
 
-Dark mode uses white Braille dots on a black background.
+Dark mode uses white pattern dots on a black background.
 
 ## Hollow edges
 
