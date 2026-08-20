@@ -14,7 +14,7 @@ const out = join(root, "dist");
 const assets = join(stage, "assets");
 const api = join(stage, "v1");
 const tplDir = join(repo, "templates", "embed");
-const cdn = "https://kitty-crow.github.io/braille-qr/v1/embed.js";
+const cdn = "https://kitty-crow.github.io/unicode-qr-studio/v1/embed.js";
 
 await rm(stage, { recursive: true, force: true });
 await rm(out, { recursive: true, force: true });
