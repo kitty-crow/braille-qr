@@ -7,7 +7,7 @@ const tpl: EmbedTpl = { html: __EMBED_HTML__ };
 type Mode = "compact" | "static";
 
 interface MarkedApi {
-  parse(src: string): string;
+  parse(src: string): string | Promise<string>;
 }
 
 interface PurifyApi {
@@ -24,6 +24,72 @@ interface Libs {
   readonly highlight: HighlightApi;
 }
 
+const src = {
+  marked: "https://cdn.jsdelivr.net/npm/marked@18.0.7/lib/marked.umd.js",
+  purify: "https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js",
+  highlight: "https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js",
+} as const;
+
+const loads = new Map<string, Promise<void>>();
+
+const win = (): {
+  readonly marked?: MarkedApi;
+  readonly DOMPurify?: PurifyApi;
+  readonly hljs?: HighlightApi;
+} => window as unknown as {
+  readonly marked?: MarkedApi;
+  readonly DOMPurify?: PurifyApi;
+  readonly hljs?: HighlightApi;
+};
+
+const load = (url: string, ready: () => boolean): Promise<void> => {
+  if (ready()) return Promise.resolve();
+
+  const current = loads.get(url);
+  if (current) return current;
+
+  const promise = new Promise<void>((resolve, reject) => {
+    const old = document.querySelector<HTMLScriptElement>(`script[src="${url}"]`);
+    if (old) {
+      old.addEventListener("load", () => resolve(), { once: true });
+      old.addEventListener("error", () => reject(new Error(`Could not load ${url}.`)), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = url;
+    script.async = true;
+    script.addEventListener("load", () => resolve(), { once: true });
+    script.addEventListener("error", () => reject(new Error(`Could not load ${url}.`)), { once: true });
+    document.head.append(script);
+  });
+
+  loads.set(url, promise);
+  return promise;
+};
+
+const libs = async (): Promise<Libs> => {
+  await load(src.marked, () => Boolean(win().marked));
+  await load(src.purify, () => Boolean(win().DOMPurify));
+  await load(src.highlight, () => Boolean(win().hljs));
+
+  const value = win();
+  if (!value.marked || !value.DOMPurify || !value.hljs) {
+    throw new Error("Embed highlighting libraries did not initialise.");
+  }
+
+  return {
+    marked: value.marked,
+    purify: value.DOMPurify,
+    highlight: value.hljs,
+  };
+};
+
+const fence = (value: string): string => {
+  const longest = Math.max(0, ...(value.match(/`+/gu) ?? []).map(run => run.length));
+  return "`".repeat(Math.max(3, longest + 1));
+};
+
 class EmbedView {
   private readonly fill = new Tpl();
   private readonly text = this.el<HTMLTextAreaElement>("[data-text]");
@@ -38,6 +104,7 @@ class EmbedView {
   private staticRaw = "";
   private mode: Mode = "compact";
   private timer: number | undefined;
+  private renderGeneration = 0;
   private compactTab: HTMLButtonElement | null = null;
   private staticTab: HTMLButtonElement | null = null;
 
@@ -148,30 +215,32 @@ class EmbedView {
   }
 
   private render(html: string): void {
+    const generation = ++this.renderGeneration;
     this.view.replaceChildren();
     this.view.scrollLeft = 0;
     if (!html) return;
+    void this.renderRich(html, generation);
+  }
 
-    const libs = this.libs();
-    if (libs === null) {
-      this.plain(html);
-      return;
-    }
-
+  private async renderRich(html: string, generation: number): Promise<void> {
     try {
-      const md = `\`\`\`html\n${html}\n\`\`\``;
-      const safe = libs.purify.sanitize(libs.marked.parse(md));
-      this.view.innerHTML = safe;
+      const api = await libs();
+      if (generation !== this.renderGeneration) return;
 
+      const ticks = fence(html);
+      const rendered = await api.marked.parse(`${ticks}html\n${html}\n${ticks}`);
+      if (generation !== this.renderGeneration) return;
+
+      this.view.innerHTML = api.purify.sanitize(String(rendered));
       const blocks = this.view.querySelectorAll<HTMLElement>("pre code");
       if (blocks.length === 0) {
         this.plain(html);
         return;
       }
 
-      blocks.forEach((block) => libs.highlight.highlightElement(block));
+      blocks.forEach((block) => api.highlight.highlightElement(block));
     } catch {
-      this.plain(html);
+      if (generation === this.renderGeneration) this.plain(html);
     }
   }
 
@@ -182,24 +251,6 @@ class EmbedView {
     code.textContent = html;
     pre.append(code);
     this.view.replaceChildren(pre);
-  }
-
-  private libs(): Libs | null {
-    const win = window as unknown as {
-      readonly marked?: MarkedApi;
-      readonly DOMPurify?: PurifyApi;
-      readonly hljs?: HighlightApi;
-    };
-
-    if (win.marked === undefined || win.DOMPurify === undefined || win.hljs === undefined) {
-      return null;
-    }
-
-    return {
-      marked: win.marked,
-      purify: win.DOMPurify,
-      highlight: win.hljs,
-    };
   }
 
   private async copyOut(event: Event): Promise<void> {
