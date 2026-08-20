@@ -159,7 +159,7 @@ class Web {
   }
 
   private mini(): void {
-    const mat = this.qr.make("https://github.com/kitty-crow/braille-qr", "H", 4);
+    const mat = this.qr.make("https://github.com/kitty-crow/unicode-qr-studio", "H", 4);
     const code = this.brl.make(this.dots.make(mat, 2, "fill", 1));
     this.grid(this.els.mini, code, "mini-row", "mini-cell", "--mini-cols", "--mini-cell");
   }
