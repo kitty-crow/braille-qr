@@ -34,6 +34,10 @@ test("builds the existing routes through the template", async () => {
     "assets/pages/boot.js",
     "assets/pages/runtime.js",
     "assets/pages/styles.css",
+    "styles/styles.css",
+    "styles/fixes.css",
+    "styles/skin.css",
+    "styles/content.css",
     "v1/embed.js",
     "v1/load.js",
     "v1/embed.css"
@@ -52,11 +56,12 @@ test("keeps project layout and application assets local", async () => {
   const embedView = await Bun.file(join(dist, "assets", "embed-view.js")).text();
 
   expect(home).toContain("QR codes,<br>rendered as text.");
+  expect(home).toContain('href="./styles/styles.css"');
   expect(home).toContain('src="./assets/app.js"');
   expect(home).toContain('src="./assets/pages/runtime.js"');
   expect(home).toContain("data-version");
   expect(readme).toContain("Braille QR documentation");
-  expect(readme).toContain('href="../styles.css"');
+  expect(readme).toContain('href="../styles/styles.css"');
   expect(readme).toContain('src="../assets/pages/runtime.js"');
   expect(readme).toContain("data-version");
   expect(embedView).toContain("No JavaScript");
