@@ -1,6 +1,6 @@
 # Security
 
-The browser generator runs locally. Payload text is not submitted to a Braille QR application server.
+The browser generator runs locally. Payload text is not submitted to a Unicode QR Studio application server.
 
 Query-string payloads appear in browser history and may appear in logs. Use the fragment form for sensitive values:
 
