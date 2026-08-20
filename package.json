@@ -1,9 +1,9 @@
 {
   "name": "braille-qr",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "type": "module",
-  "description": "Generate dense Unicode Braille QR codes as terminal text, self-contained HTML, or a browser app.",
+  "description": "Generate dense text-rendered QR codes as terminal text, self-contained HTML, or a browser app.",
   "author": "Kitty Crow (https://kittycrow.dev)",
   "bin": {
     "braille-qr": "src/main.ts"
