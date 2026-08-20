@@ -21,7 +21,7 @@ export class Page {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Braille QR</title>
+<title>Unicode QR Studio</title>
 <style>
   :root {
     color-scheme: ${scheme};
