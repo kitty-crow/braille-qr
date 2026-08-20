@@ -11,6 +11,7 @@ on:
       - "src/ext/qrcode.d.ts"
       - "templates/embed/**"
       - "vendor/pages"
+      - "vendor/website"
       - ".gitmodules"
       - "pages.config.ts"
       - "version.json"
