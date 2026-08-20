@@ -71,7 +71,6 @@ See the [embedding guide](docs/embed.md).
 bun run site:check
 bun run site:build
 bun run site:test
-bun run site:dev
 ```
 
 The Pages app provides:
@@ -84,9 +83,9 @@ The Pages app provides:
 - clean extensionless navigation
 - experimental hollow-edge, distance-sensitive rendering
 
-The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour, footer version loading and README renderer. Braille QR keeps its current page markup, application code, embed API and project CSS locally.
+The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour, footer version loading and README renderer. Braille QR keeps its page markup, browser application code, embed API and project CSS locally.
 
-`site/build.ts` bundles the Braille QR browser code and embed API into a temporary Pages source tree, then delegates route and shared-runtime generation to `pages.config.ts`. Generated artefacts remain ignored.
+The Pages source layout keeps page glue at `site/*.html`, styles under `site/styles/`, and browser TypeScript under `site/src/`. `site/build.ts` bundles the browser code and embed API into a temporary Pages source tree, copies the static page and style sources, then delegates route and shared-runtime generation to `pages.config.ts`. Generated artefacts remain ignored.
 
 GitHub workflows:
 
