@@ -6,7 +6,7 @@
 
   const src = script.dataset.api;
   if (!src) {
-    host.textContent = "Braille QR API URL is missing.";
+    host.textContent = "Unicode QR Studio API URL is missing.";
     return;
   }
 
@@ -20,8 +20,8 @@
         api.async = true;
         api.onload = () => win.BrailleQr
           ? resolve(win.BrailleQr)
-          : reject(new Error("Braille QR API did not initialise."));
-        api.onerror = () => reject(new Error(`Could not load Braille QR API: ${src}`));
+          : reject(new Error("Unicode QR Studio API did not initialise."));
+        api.onerror = () => reject(new Error(`Could not load Unicode QR Studio API: ${src}`));
         document.head.append(api);
       });
 
