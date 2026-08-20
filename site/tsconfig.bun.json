@@ -18,7 +18,6 @@
     ]
   },
   "include": [
-    "./build.ts",
-    "./serve.ts"
+    "./build.ts"
   ]
 }
