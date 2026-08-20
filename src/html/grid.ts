@@ -6,7 +6,7 @@ export class Grid {
 
   make(code: Code, justify: boolean): string {
     if (!justify) {
-      return `<pre class="qr plain" aria-label="Braille QR code">${this.esc.html(code.text())}</pre>`;
+      return `<pre class="qr plain" aria-label="Unicode QR code">${this.esc.html(code.text())}</pre>`;
     }
 
     const rows = code
@@ -19,6 +19,6 @@ export class Grid {
       })
       .join("\n");
 
-    return `<div class="qr fixed" role="img" aria-label="Braille QR code">${rows}</div>`;
+    return `<div class="qr fixed" role="img" aria-label="Unicode QR code">${rows}</div>`;
   }
 }
