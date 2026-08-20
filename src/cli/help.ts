@@ -6,10 +6,10 @@ Terminal output and fixed-width justification are enabled by default.
 Options:
   --text <value>          Encode supplied text
   --token-bytes <n>       Random token size in bytes (default: 64)
-  --scale <n>             Braille-dot scale per QR module (default: 8)
+  --scale <n>             Dot scale per QR module (default: 8)
   --ec <L|M|Q|H>          Error correction (default: H)
   --border <n>            Quiet zone in QR modules (default: 4)
-  --font-size <px>        HTML Braille font size (default: 2.5)
+  --font-size <px>        HTML glyph font size (default: 2.5)
   --thicken <px>          HTML glyph thickening (default: 0.18)
   --dark                  White on black
   --edges                 Draw hollow module edges
