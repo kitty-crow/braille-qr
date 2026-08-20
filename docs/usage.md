@@ -33,5 +33,5 @@ bun run qr --text "https://kittycrow.dev" --embed
 ```bash
 bun run site:check
 bun run site:build
-bun run site:dev
+bun run site:test
 ```
