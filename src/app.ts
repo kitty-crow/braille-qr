@@ -65,7 +65,7 @@ export class App {
   }
 
   private async emit(fmt: Fmt, path: string | undefined, data: string): Promise<string | undefined> {
-    const dest = path ?? (fmt === "html" ? "output/braille-qr.html" : undefined);
+    const dest = path ?? (fmt === "html" ? "output/unicode-qr-studio.html" : undefined);
     if (dest === undefined) {
       this.io.print(data);
       return undefined;
@@ -79,7 +79,7 @@ export class App {
     console.error(`Kind: ${meta.kind}`);
     console.error(`Payload: ${meta.chars} characters, ${meta.bytes} bytes`);
     console.error(`QR: ${meta.qr} × ${meta.qr} modules including quiet zone`);
-    console.error(`Braille: ${meta.cols} columns × ${meta.rows} rows`);
+    console.error(`Unicode grid: ${meta.cols} columns × ${meta.rows} rows`);
     if (meta.kind === "token") console.error(`Token: ${text}`);
   }
 }
