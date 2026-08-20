@@ -4,7 +4,7 @@ import { staticEmbedHtml } from "../src/static-embed.ts";
 
 const root = join(import.meta.dir, "..", "..");
 const dist = join(root, "site", "dist");
-const pin = "7f8266bfa146476784a4435ca5f8d8fac29c223e";
+const pin = "b0e7a32e71d2fe1092bb78773f816139f4f10cbb";
 const repoUrl = "https://github.com/kitty-crow/unicode-qr-studio";
 const pagesUrl = "https://kitty-crow.github.io/unicode-qr-studio";
 
