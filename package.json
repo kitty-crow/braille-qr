@@ -1,6 +1,6 @@
 {
   "name": "braille-qr",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "private": true,
   "type": "module",
   "description": "Generate dense text-rendered QR codes as terminal text, self-contained HTML, or a browser app.",
@@ -24,10 +24,15 @@
     "site:ci": "bun run version:check && bun run check && bun run site:check && bun run site:build && bun run site:test"
   },
   "dependencies": {
-    "qrcode": "^1.5.4"
+    "@kittycrypto/website": "file:vendor/website",
+    "qrcode": "^1.5.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "typescript": "^5.8.3"
   },
   "engines": {
