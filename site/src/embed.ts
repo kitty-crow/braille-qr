@@ -63,7 +63,7 @@ class View {
       const dark = this.dark(cfg.theme);
       const tpl = this.host.querySelector<HTMLTemplateElement>("template[data-braille-qr-template]");
 
-      if (!tpl) throw new Error("Braille QR embed template is missing.");
+      if (!tpl) throw new Error("Unicode QR Studio embed template is missing.");
 
       this.root.replaceChildren(tpl.content.cloneNode(true));
       const frame = this.need<HTMLElement>(".frame");
@@ -148,7 +148,7 @@ class View {
     };
     const text = this.opts.text ?? val("text") ?? this.host.dataset.text ?? "";
 
-    if (!text) throw new Error("Braille QR embed requires data-text.");
+    if (!text) throw new Error("Unicode QR Studio embed requires data-text.");
 
     return {
       text,
@@ -205,7 +205,7 @@ class View {
 }
 
 export function mount(host: Element | null, opts: Partial<Opts> = {}): void {
-  if (!(host instanceof HTMLElement)) throw new Error("Braille QR host must be an HTMLElement.");
+  if (!(host instanceof HTMLElement)) throw new Error("Unicode QR Studio host must be an HTMLElement.");
   new View(host, opts).run();
 }
 
