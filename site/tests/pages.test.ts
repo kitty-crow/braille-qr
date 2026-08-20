@@ -55,12 +55,13 @@ test("keeps project layout and application assets local", async () => {
   const readme = await Bun.file(join(dist, "readme", "index.html")).text();
   const embedView = await Bun.file(join(dist, "assets", "embed-view.js")).text();
 
+  expect(home).toContain("Unicode QR Studio");
   expect(home).toContain("QR codes,<br>rendered as text.");
   expect(home).toContain('href="./styles/styles.css"');
   expect(home).toContain('src="./assets/app.js"');
   expect(home).toContain('src="./assets/pages/runtime.js"');
   expect(home).toContain("data-version");
-  expect(readme).toContain("Braille QR documentation");
+  expect(readme).toContain("Unicode QR Studio documentation");
   expect(readme).toContain('href="../styles/styles.css"');
   expect(readme).toContain('src="../assets/pages/runtime.js"');
   expect(readme).toContain("data-version");
@@ -77,7 +78,7 @@ test("no-JavaScript embed is formatted literal self-contained HTML with compact-
     dark: false,
   });
   expect(html).toContain('role="img"');
-  expect(html).toContain("Braille QR code");
+  expect(html).toContain("Unicode QR code");
   expect(html).toContain("container-type:inline-size");
   expect(html).toContain("width:min(100%,24rem);aspect-ratio:1");
   expect(html).toContain("place-items:center");
