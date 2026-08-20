@@ -3,6 +3,7 @@ import type { Code } from "../../src/core/code.js";
 import { Dots } from "../../src/core/dots.js";
 import { Qr } from "../../src/core/qr.js";
 import type { Draw, Ec } from "../../src/types.js";
+import { gridFrag, metricsFrag } from "./ui/fragments.tsx";
 
 type Theme = "light" | "dark";
 
@@ -121,11 +122,11 @@ class Web {
 
       this.last = { text, code, dark, qr: mat.w };
       this.render(code, dark);
-      this.els.metrics.innerHTML = [
+      this.els.metrics.replaceChildren(metricsFrag([
         `${text.length} chars`,
         `${mat.w} × ${mat.h} modules`,
         `${code.cols} × ${code.rows} Unicode cells`,
-      ].map((item) => `<span>${item}</span>`).join("");
+      ]));
       this.msg("Live preview updated.");
       this.enable(true);
     } catch (err: unknown) {
@@ -172,24 +173,18 @@ class Web {
     colsVar: string,
     cellVar: string,
   ): void {
-    const grid = document.createElement("div");
-    grid.className = host === this.els.mini ? "mini-grid" : "qr-grid";
+    const frag = gridFrag(
+      code,
+      host === this.els.mini ? "mini-grid" : "qr-grid",
+      rowName,
+      cellName,
+    );
+    const grid = frag.firstElementChild;
+    if (!(grid instanceof HTMLElement)) throw new Error("QR grid fragment is missing its root element.");
+
     grid.style.setProperty(colsVar, String(code.cols));
     grid.style.setProperty(cellVar, `${this.cell(host)}px`);
-
-    code.chars().forEach((line) => {
-      const row = document.createElement("div");
-      row.className = rowName;
-      line.forEach((char) => {
-        const cell = document.createElement("span");
-        cell.className = cellName;
-        cell.textContent = char;
-        row.append(cell);
-      });
-      grid.append(row);
-    });
-
-    host.replaceChildren(grid);
+    host.replaceChildren(frag);
   }
 
   private redraw(): void {
