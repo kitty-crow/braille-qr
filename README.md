@@ -1,6 +1,6 @@
-# Braille QR
+# Unicode QR Studio
 
-A strongly typed Bun and TypeScript utility that renders genuine QR matrices as dense Unicode Braille. It supports terminal text, self-contained HTML, a browser generator and paste-ready website embeds.
+A strongly typed Bun and TypeScript utility that renders genuine QR matrices as dense text using Unicode Braille Patterns characters. It supports terminal text, self-contained HTML, a browser generator and paste-ready website embeds.
 
 Without `--text`, the CLI creates a random 64-byte token and encodes its uppercase hexadecimal representation.
 
@@ -61,7 +61,7 @@ bun run qr \
 
 The result is one paste-ready host div. It links to the versioned GitHub Pages CSS, loader and bundled browser API, while the consuming website controls the size and position of the outer div.
 
-The web generator's embed panel has **Compact** and **No JavaScript** tabs. Compact shows and copies the existing runtime-backed fragment. No JavaScript expands the current QR into literal Braille plus inline CSS only, with no script, external stylesheet, external asset or network fetch; the same copy button copies whichever tab is selected. The static form is deliberately much more verbose and cannot perform the compact runtime's font-metric calibration.
+The web generator's embed panel has **Compact** and **No JavaScript** tabs. Compact shows and copies the existing runtime-backed fragment. No JavaScript expands the current QR into literal Unicode pattern characters plus inline CSS only, with no script, external stylesheet, external asset or network fetch; the same copy button copies whichever tab is selected. The static form is deliberately much more verbose and cannot perform the compact runtime's font-metric calibration.
 
 See the [embedding guide](docs/embed.md).
 
@@ -83,7 +83,7 @@ The Pages app provides:
 - clean extensionless navigation
 - experimental hollow-edge, distance-sensitive rendering
 
-The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour, footer version loading and README renderer. Braille QR keeps its page markup, browser application code, embed API and project CSS locally.
+The pinned `vendor/pages` submodule supplies the GitHub Pages route compiler, early theme boot, persisted theme state, Ko-fi behaviour, footer version loading and README renderer. Unicode QR Studio keeps its page markup, browser application code, embed API and project CSS locally.
 
 The Pages source layout keeps page glue at `site/*.html`, styles under `site/styles/`, and browser TypeScript under `site/src/`. `site/build.ts` bundles the browser code and embed API into a temporary Pages source tree, copies the static page and style sources, then delegates route and shared-runtime generation to `pages.config.ts`. Generated artefacts remain ignored.
 
@@ -114,10 +114,10 @@ bun run qr --text "https://kittycrow.dev" --edges
 ```text
 --text <value>          Encode supplied text
 --token-bytes <n>       Random token size in bytes, default 64
---scale <n>             Braille-dot scale per QR module, default 8
+--scale <n>             Dot scale per QR module, default 8
 --ec <L|M|Q|H>          Error correction, default H
 --border <n>            Quiet zone in modules, default 4
---font-size <px>        HTML Braille font size, default 2.5
+--font-size <px>        HTML glyph font size, default 2.5
 --thicken <px>          HTML glyph thickening, default 0.18
 --dark                  White on black
 --edges                 Draw hollow module edges
@@ -125,7 +125,7 @@ bun run qr --text "https://kittycrow.dev" --edges
 --html                  Generate self-contained HTML
 --embed                 Generate a paste-ready embed div
 --embed-src <url>       Override the published embed API URL
---no-justify            Disable fixed-width row layout
+--no-justify            Disable fixed-width rows
 -o, --output <path>     Save output
 ```
 
