@@ -74,7 +74,7 @@ class EmbedView {
     button.textContent = label;
     button.setAttribute("role", "tab");
     button.setAttribute("aria-selected", String(selected));
-    if (mode === "static") button.title = "Self-contained literal Braille QR with inline CSS only; no JavaScript or external fetching.";
+    if (mode === "static") button.title = "Self-contained literal Unicode QR with inline CSS only; no JavaScript or external fetching.";
     button.addEventListener("click", () => this.select(mode));
     return button;
   }
