@@ -4,22 +4,28 @@ import { staticEmbedHtml } from "../src/static-embed.ts";
 
 const root = join(import.meta.dir, "..", "..");
 const dist = join(root, "site", "dist");
-const pin = "b0e7a32e71d2fe1092bb78773f816139f4f10cbb";
+const pagesPin = "b0e7a32e71d2fe1092bb78773f816139f4f10cbb";
+const websitePin = "2331a54893fed5ec7c0bdbd3d8d1c9fef51794f5";
 const repoUrl = "https://github.com/kitty-crow/unicode-qr-studio";
 const pagesUrl = "https://kitty-crow.github.io/unicode-qr-studio";
 
-test("pins the shared Pages dependency", async () => {
-  const modules = await Bun.file(join(root, ".gitmodules")).text();
-  expect(modules).toContain("github-pages-template.git");
-
-  const proc = Bun.spawn(["git", "ls-tree", "HEAD", "vendor/pages"], {
+const tree = async (path: string): Promise<string> => {
+  const proc = Bun.spawn(["git", "ls-tree", "HEAD", path], {
     cwd: root,
     stdout: "pipe",
     stderr: "pipe"
   });
   const output = await new Response(proc.stdout).text();
   expect(await proc.exited).toBe(0);
-  expect(output).toContain(pin);
+  return output;
+};
+
+test("pins the shared Pages and website static UI dependencies", async () => {
+  const modules = await Bun.file(join(root, ".gitmodules")).text();
+  expect(modules).toContain("github-pages-template.git");
+  expect(modules).toContain("kittyCrypto-gg/website.git");
+  expect(await tree("vendor/pages")).toContain(pagesPin);
+  expect(await tree("vendor/website")).toContain(websitePin);
 });
 
 test("builds the existing routes through the template", async () => {
@@ -80,6 +86,67 @@ test("keeps project layout and renamed application paths local", async () => {
   for (const built of [home, readme, app, embedView, runtime]) {
     expect(built).not.toContain("kitty-crow.github.io/braille-qr");
     expect(built).not.toContain("github.com/kitty-crow/braille-qr");
+  }
+});
+
+test("keeps the hot QR generator path imperative and React-free", async () => {
+  const source = await Bun.file(join(root, "site", "src", "app.ts")).text();
+  const built = await Bun.file(join(dist, "assets", "app.js")).text();
+
+  expect(source).toContain('document.createElement("div")');
+  expect(source).toContain('document.createElement("span")');
+  expect(source).toContain("this.els.form.addEventListener");
+  expect(source).not.toContain("@kittycrypto/website");
+  expect(source).not.toContain("render2Frag");
+  expect(source).not.toContain("react-dom");
+  expect(built).not.toContain("react-dom");
+  expect(built).not.toContain("renderToStaticMarkup");
+  expect(built).not.toContain("renderToString");
+});
+
+test("uses static UI helpers only for small embed controls and fallback code", async () => {
+  const fragments = await Bun.file(join(root, "site", "src", "ui", "embed-fragments.tsx")).text();
+  const embedView = await Bun.file(join(root, "site", "src", "embed-view.ts")).text();
+
+  expect(fragments).toContain('@kittycrypto/website/static-ui');
+  expect(fragments).toContain("render2Frag");
+  expect(fragments).toContain("embedTabsFrag");
+  expect(fragments).toContain("plainCodeFrag");
+  expect(fragments).not.toContain("mini-grid");
+  expect(fragments).not.toContain("qr-grid");
+  expect(embedView).toContain("embedTabsFrag()");
+  expect(embedView).toContain("plainCodeFrag(html)");
+  expect(embedView).not.toContain("createRoot(");
+  expect(embedView).not.toContain("hydrateRoot(");
+});
+
+test("restores the self-loading Marked HTML colour renderer", async () => {
+  const source = await Bun.file(join(root, "site", "src", "web", "rich-code.ts")).text();
+  const embedView = await Bun.file(join(root, "site", "src", "embed-view.ts")).text();
+  const built = await Bun.file(join(dist, "assets", "embed-view.js")).text();
+
+  expect(source).toContain("marked@18.0.7");
+  expect(source).toContain("dompurify@3.4.12");
+  expect(source).toContain("@highlightjs/cdn-assets@11.11.1");
+  expect(source).toContain("api.marked.parse");
+  expect(source).toContain("api.purify.sanitize");
+  expect(source).toContain("api.highlight.highlightElement");
+  expect(embedView).toContain("richHtmlFrag(html)");
+  expect(built).toContain("marked@18.0.7");
+  expect(built).toContain("dompurify@3.4.12");
+  expect(built).toContain("highlight.min.js");
+});
+
+test("keeps the public embed runtime and no-JavaScript output React-free", async () => {
+  const embedSource = await Bun.file(join(root, "site", "src", "embed.ts")).text();
+  const staticSource = await Bun.file(join(root, "site", "src", "static-embed.ts")).text();
+  const built = await Bun.file(join(dist, "v1", "embed.js")).text();
+
+  for (const source of [embedSource, staticSource, built]) {
+    expect(source).not.toContain("@kittycrypto/website");
+    expect(source).not.toContain("react-dom");
+    expect(source).not.toContain("render2Frag");
+    expect(source).not.toContain("createRoot(");
   }
 });
 
