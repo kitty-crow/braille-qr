@@ -5,7 +5,7 @@ The browser generator runs locally. Payload text is not submitted to a Unicode Q
 Query-string payloads appear in browser history and may appear in logs. Use the fragment form for sensitive values:
 
 ```text
-https://kitty-crow.github.io/braille-qr/generate#text=SECRET
+https://kitty-crow.github.io/unicode-qr-studio/generate#text=SECRET
 ```
 
 A generated session token is a bearer credential. Anyone who obtains it can use it wherever that token is accepted.
