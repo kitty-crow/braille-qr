@@ -19,7 +19,7 @@ const esc = (value: string): string => value.replace(/[&<>"']/gu, char => ({
   "'": "&#39;",
 })[char] ?? char);
 
-/** Self-contained literal Braille QR: inline styles only, no script/link/fetch dependency. */
+/** Self-contained literal Unicode QR: inline styles only, no script/link/fetch dependency. */
 export const staticEmbedHtml = (cfg: StaticEmbedCfg): string => {
   const mat = new Qr().make(cfg.text, cfg.ec, 4);
   const code = new Braille().make(new Dots().make(mat, cfg.scale, cfg.draw, 1));
@@ -41,7 +41,7 @@ export const staticEmbedHtml = (cfg: StaticEmbedCfg): string => {
   });
 
   return [
-    `<div role="img" aria-label="Braille QR code" style="display:grid;place-items:center;width:min(100%,24rem);aspect-ratio:1;container-type:inline-size;overflow:hidden;background:${bg};color:${fg};font-family:${fonts};font-weight:400;font-synthesis:none;font-variant-ligatures:none;letter-spacing:0;text-rendering:geometricPrecision">`,
+    `<div role="img" aria-label="Unicode QR code" style="display:grid;place-items:center;width:min(100%,24rem);aspect-ratio:1;container-type:inline-size;overflow:hidden;background:${bg};color:${fg};font-family:${fonts};font-weight:400;font-synthesis:none;font-variant-ligatures:none;letter-spacing:0;text-rendering:geometricPrecision">`,
     `  <div style="width:${(cols * fallbackCell).toFixed(4)}px;width:${gridWidth};overflow:visible">`,
     ...rows.map(row => `    ${row}`),
     "  </div>",
