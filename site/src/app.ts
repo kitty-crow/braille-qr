@@ -124,7 +124,7 @@ class Web {
       this.els.metrics.innerHTML = [
         `${text.length} chars`,
         `${mat.w} × ${mat.h} modules`,
-        `${code.cols} × ${code.rows} Braille`,
+        `${code.cols} × ${code.rows} Unicode cells`,
       ].map((item) => `<span>${item}</span>`).join("");
       this.msg("Live preview updated.");
       this.enable(true);
@@ -234,7 +234,7 @@ class Web {
 
     try {
       await navigator.clipboard.writeText(this.last.code.text());
-      this.msg("Braille QR copied.");
+      this.msg("Unicode QR copied.");
     } catch {
       this.msg("Clipboard access was blocked.");
     }
@@ -242,13 +242,13 @@ class Web {
 
   private saveText(): void {
     if (!this.last) return;
-    this.save("braille-qr.txt", `${this.last.code.text()}\n`, "text/plain;charset=utf-8");
+    this.save("unicode-qr-studio.txt", `${this.last.code.text()}\n`, "text/plain;charset=utf-8");
   }
 
   private saveHtml(): void {
     if (!this.last) return;
     this.save(
-      "braille-qr.html",
+      "unicode-qr-studio.html",
       this.page(this.last.code, this.last.dark),
       "text/html;charset=utf-8",
     );
@@ -261,7 +261,7 @@ class Web {
       `<div class="r">${line.map((char) => `<span>${char}</span>`).join("")}</div>`
     )).join("");
 
-    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Braille QR</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:${bg}}body{display:grid;place-items:center;padding:24px}.q{--c:2px;color:${fg};font-family:"Apple Braille","Noto Sans Symbols 2","DejaVu Sans Mono",monospace;font-size:2.5px}.r{display:grid;grid-template-columns:repeat(${code.cols},var(--c));width:calc(${code.cols}*var(--c));height:calc(var(--c)*2)}span{display:block;width:var(--c);height:calc(var(--c)*2);line-height:calc(var(--c)*2);white-space:pre;overflow:visible}</style></head><body><main class="q">${rows}</main><script>const q=document.querySelector('.q'),p=document.createElement('span');p.textContent='⣿'.repeat(200);p.style.cssText='position:absolute;visibility:hidden;white-space:pre;font:inherit';document.body.append(p);q.style.setProperty('--c',(p.getBoundingClientRect().width/200)+'px');p.remove();</script></body></html>`;
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Unicode QR Studio</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:${bg}}body{display:grid;place-items:center;padding:24px}.q{--c:2px;color:${fg};font-family:"Apple Braille","Noto Sans Symbols 2","DejaVu Sans Mono",monospace;font-size:2.5px}.r{display:grid;grid-template-columns:repeat(${code.cols},var(--c));width:calc(${code.cols}*var(--c));height:calc(var(--c)*2)}span{display:block;width:var(--c);height:calc(var(--c)*2);line-height:calc(var(--c)*2);white-space:pre;overflow:visible}</style></head><body><main class="q">${rows}</main><script>const q=document.querySelector('.q'),p=document.createElement('span');p.textContent='⣿'.repeat(200);p.style.cssText='position:absolute;visibility:hidden;white-space:pre;font:inherit';document.body.append(p);q.style.setProperty('--c',(p.getBoundingClientRect().width/200)+'px');p.remove();</script></body></html>`;
   }
 
   private save(name: string, data: string, type: string): void {
