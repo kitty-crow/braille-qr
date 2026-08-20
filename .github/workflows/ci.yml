@@ -19,8 +19,12 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install
         run: bun install
+      - name: Install browser engines
+        run: bunx playwright install --with-deps chromium webkit
       - name: Check and bundle
         run: bun run site:ci
+      - name: Browser interactions
+        run: bun run site:e2e
       - name: Confirm generated files are untracked
         run: |
           test -f site/dist/assets/app.js
