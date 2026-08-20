@@ -30,7 +30,7 @@ export default definePages({
     files: ["kofi.css"]
   },
   runtime: {
-    base: "/braille-qr/",
+    base: "/unicode-qr-studio/",
     theme: {
       key: "braille-qr.theme",
       colours: {
@@ -60,7 +60,7 @@ export default definePages({
     },
     readme: {
       owner: "kitty-crow",
-      repo: "braille-qr",
+      repo: "unicode-qr-studio",
       branch: "main",
       path: "README.md",
       content: "#readme-content",
